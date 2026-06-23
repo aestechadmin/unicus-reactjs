@@ -63,11 +63,11 @@ const Clients = ({ clientsData }) => {
 
   // GSAP animations on mount and when data changes
   useEffect(() => {
-    // Only run animations if data is loaded
     if (!isDataLoaded && !clientsData) return;
 
+    const cards = cardsRef.current; // 🔥 COPY REF HERE
+
     const ctx = gsap.context(() => {
-      // Animate floating background elements
       floatingElementsRef.current.forEach((el, i) => {
         if (el) {
           gsap.to(el, {
@@ -83,104 +83,55 @@ const Clients = ({ clientsData }) => {
         }
       });
 
-      // Title text reveal animation with 3D effect
-      if (titleRef.current) {
-        const titleChars = titleRef.current.querySelectorAll('.title-char');
-        if (titleChars.length > 0) {
-          gsap.fromTo(titleChars,
-            { 
-              y: 120, 
-              opacity: 0,
-              rotationX: -120,
-              scale: 0.5
-            },
-            {
-              y: 0,
-              opacity: 1,
-              rotationX: 0,
-              scale: 1,
-              duration: 0.6,
-              stagger: 0.03,
-              ease: "back.out(1.4)",
-              scrollTrigger: {
-                trigger: titleRef.current,
-                start: "top 80%",
-                toggleActions: "play none none reverse"
-              }
-            }
-          );
-        }
-      }
+      // cards animation
+      cards.forEach((card, idx) => {
+        if (!card) return;
 
-      // Cards staggered entrance with magnetic effect on hover
-      cardsRef.current.forEach((card, idx) => {
-        if (card) {
-          // Card entrance animation
-          gsap.fromTo(card,
-            {
-              y: 150,
-              opacity: 0,
-              rotationY: 30,
-              filter: "blur(10px)"
-            },
-            {
-              y: 0,
-              opacity: 1,
-              rotationY: 0,
-              filter: "blur(0px)",
-              duration: 0.8,
-              delay: idx * 0.15,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: card,
-                start: "top 85%",
-                toggleActions: "play none none reverse"
-              }
-            }
-          );
+        const moveHandler = (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
 
-          // Magnetic effect on mouse move
-          card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = (y - centerY) / 20;
-            const rotateY = (centerX - x) / 20;
-            
-            gsap.to(card, {
-              rotateX: rotateX,
-              rotateY: rotateY,
-              duration: 0.5,
-              ease: "power2.out",
-              overwrite: true
-            });
+          gsap.to(card, {
+            rotateX: (y - rect.height / 2) / 20,
+            rotateY: (rect.width / 2 - x) / 20,
+            duration: 0.5
           });
-          
-          card.addEventListener('mouseleave', () => {
-            gsap.to(card, {
-              rotateX: 0,
-              rotateY: 0,
-              duration: 0.5,
-              ease: "elastic.out(1, 0.5)"
-            });
+        };
+
+        const leaveHandler = () => {
+          gsap.to(card, {
+            rotateX: 0,
+            rotateY: 0,
+            duration: 0.5
           });
-        }
+        };
+
+        card.addEventListener("mousemove", moveHandler);
+        card.addEventListener("mouseleave", leaveHandler);
+
+        // store handlers for cleanup
+        card._moveHandler = moveHandler;
+        card._leaveHandler = leaveHandler;
       });
     });
 
     return () => {
       ctx.revert();
-      // Clean up card event listeners
-      cardsRef.current.forEach((card) => {
-        if (card) {
-          card.removeEventListener('mousemove', () => {});
-          card.removeEventListener('mouseleave', () => {});
+
+      // 🔥 SAFE cleanup
+      cards.forEach((card) => {
+        if (!card) return;
+
+        if (card._moveHandler) {
+          card.removeEventListener("mousemove", card._moveHandler);
+        }
+        if (card._leaveHandler) {
+          card.removeEventListener("mouseleave", card._leaveHandler);
         }
       });
     };
-  }, [isDataLoaded, clientsData]); // Re-run when data changes
+  }, [isDataLoaded, clientsData]);
 
   // Force refresh ScrollTrigger when data changes
   useEffect(() => {
