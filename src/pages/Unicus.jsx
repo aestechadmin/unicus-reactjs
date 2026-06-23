@@ -292,9 +292,9 @@ export default function Unicus() {
         sections={sections}
       />
       
-      <div id="hero">
+      {/* <div id="hero">
         <Hero heroContainerRef={heroContainerRef} />
-      </div>
+      </div> */}
       
       <div id="experience">
         <Experience 
