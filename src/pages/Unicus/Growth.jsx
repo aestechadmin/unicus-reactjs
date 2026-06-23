@@ -55,7 +55,7 @@ export default function Growth() {
           setActiveIndex(index);
         },
       });
-    }, 100);
+    }, 150);
 
     return () => {
       clearTimeout(timer);
@@ -143,13 +143,14 @@ const AnimatedTitle = ({ text }) => {
         backgroundColor: "#F5F4DE",
         position: "relative",
         zIndex: 1,
+        isolation: "isolate", 
         overflowX: "hidden",
         minHeight: "100vh",
       }}
     >
       <motion.div
         style={{
-          position: "fixed",
+          position: "absolute",
           top: 0,
           left: 0,
           right: 0,
@@ -167,6 +168,7 @@ const AnimatedTitle = ({ text }) => {
           height: `${totalItems * 100}vh`,
           position: "relative",
           background: "#F5F4DE",
+          overflow: "hidden",
         }}
       >
         <Box
