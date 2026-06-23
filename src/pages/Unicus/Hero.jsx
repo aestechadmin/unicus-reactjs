@@ -98,10 +98,10 @@ export default function Hero({ heroContainerRef, expSectionRef }) {
         trigger: heroContainerRef.current,
         scroller,
         start: "top top",
-        end: "+=2000",
-        scrub: 1.5,
-        pin: true,
-        anticipatePin: 1,
+        // end: "+=2000",
+        // scrub: 1.5,
+        // pin: true,
+        // anticipatePin: 1,
         onUpdate: (self) => {
           gsap.set(".letter, .subtitle", {
             opacity: 1 - self.progress * 4,
