@@ -268,7 +268,7 @@ export default function Unicus() {
 
     const refreshTimeout = setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 100);
+    }, 1500);
 
     return () => {
       clearTimeout(refreshTimeout);
