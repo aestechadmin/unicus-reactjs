@@ -239,6 +239,9 @@ export default function Unicus() {
     });
 
     lenisRef.current = lenis;
+    lenis.on("scroll", () => {
+      ScrollTrigger.update();
+    });
 
     const scroller = document.scrollingElement || document.documentElement;
 
@@ -269,6 +272,7 @@ export default function Unicus() {
 
     return () => {
       clearTimeout(refreshTimeout);
+      lenis.off("scroll", ScrollTrigger.update);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       ScrollTrigger.getAll().forEach((st) => st.kill());
       lenis.destroy();

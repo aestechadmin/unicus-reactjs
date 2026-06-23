@@ -88,39 +88,92 @@ export default function Hero({ heroContainerRef, expSectionRef }) {
 
   useEffect(() => {
     const video = videoRef.current;
-    
-    if (!video) return;
 
-    const scroller = document.scrollingElement || document.documentElement;
+    if (!video || !heroContainerRef.current) return;
+
+    let trigger;
 
     const handleMetadata = () => {
-      ScrollTrigger.create({
+      trigger = ScrollTrigger.create({
         trigger: heroContainerRef.current,
-        scroller,
         start: "top top",
-        // end: "+=2000",
-        // scrub: 1.5,
-        // pin: true,
-        // anticipatePin: 1,
+        end: "+=2000",
+        scrub: 1.5,
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+
         onUpdate: (self) => {
           gsap.set(".letter, .subtitle", {
-            opacity: 1 - self.progress * 4,
+            opacity: Math.max(0, 1 - self.progress * 4),
             y: -90 * self.progress,
           });
+
           if (video.duration && !isNaN(video.duration)) {
             video.currentTime = self.progress * video.duration;
           }
         },
       });
+
+      ScrollTrigger.refresh();
     };
 
     if (video.readyState >= 1) {
       handleMetadata();
     } else {
       video.addEventListener("loadedmetadata", handleMetadata);
-      return () => video.removeEventListener("loadedmetadata", handleMetadata);
     }
-  }, [heroContainerRef]);
+
+    const refreshTimer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 1000);
+
+    return () => {
+      clearTimeout(refreshTimer);
+
+      if (trigger) {
+        trigger.kill();
+      }
+
+      video.removeEventListener("loadedmetadata", handleMetadata);
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   const video = videoRef.current;
+    
+  //   if (!video) return;
+
+  //   const scroller = document.scrollingElement || document.documentElement;
+
+  //   const handleMetadata = () => {
+  //     ScrollTrigger.create({
+  //       trigger: heroContainerRef.current,
+  //       scroller,
+  //       start: "top top",
+  //       end: "+=2000",
+  //       scrub: 1.5,
+  //       pin: true,
+  //       anticipatePin: 1,
+  //       onUpdate: (self) => {
+  //         gsap.set(".letter, .subtitle", {
+  //           opacity: 1 - self.progress * 4,
+  //           y: -90 * self.progress,
+  //         });
+  //         if (video.duration && !isNaN(video.duration)) {
+  //           video.currentTime = self.progress * video.duration;
+  //         }
+  //       },
+  //     });
+  //   };
+
+  //   if (video.readyState >= 1) {
+  //     handleMetadata();
+  //   } else {
+  //     video.addEventListener("loadedmetadata", handleMetadata);
+  //     return () => video.removeEventListener("loadedmetadata", handleMetadata);
+  //   }
+  // }, [heroContainerRef]);
 
   return (
     <Box ref={heroContainerRef} sx={{ height: "100vh", position: "relative", overflow: "hidden", background: "#000" }}>
