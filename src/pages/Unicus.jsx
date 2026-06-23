@@ -144,7 +144,32 @@ export const websiteData = {
         { type: 'service', name: 'Plumbing & Water Supply', description: 'Complete water system management', image: '/img/Img5.png' },
         { type: 'service', name: 'Gardening & Landscaping', description: 'Green space maintenance', image: '/img/Img5.png' }
       ],
-      },
+    },
+    clients: {  // <-- ADD THIS SECTION
+      title: "Commitment to Clients",
+      cards: [
+        { 
+          title: "Reliable & Compliant", 
+          desc: "Timely, regulation-adherent service with strict quality controls",
+          delay: 0
+        },
+        { 
+          title: "Flexible Scheduling", 
+          desc: "Customized workflows that adapt to your unique business needs",
+          delay: 0.1
+        },
+        { 
+          title: "Proactive Reporting", 
+          desc: "In-depth updates and real-time analytics for full transparency",
+          delay: 0.2
+        },
+        { 
+          title: "Long-Term Partnerships", 
+          desc: "Focused on excellence with continuous improvement initiatives",
+          delay: 0.3
+        }
+      ]
+    },
   faq: {
     questions: [
       { q: "What facility management services do you offer?", a: "We offer comprehensive facility management including cleaning services, security, maintenance, housekeeping, pest control, and specialized manpower solutions for healthcare, commercial, residential, and corporate sectors." },
@@ -292,7 +317,7 @@ export default function Unicus() {
       </div>
 
       <div id="clients-section">
-        <Clients />
+        <Clients clientsData={websiteData.clients}/>
       </div>
 
       <div id="process-section">

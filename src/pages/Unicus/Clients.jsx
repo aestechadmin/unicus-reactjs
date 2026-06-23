@@ -1,18 +1,20 @@
 // Clients.jsx - Advanced animated component with black theme only
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Clients = () => {
+const Clients = ({ clientsData }) => {
   const sectionRef = useRef(null);
   const titleRef = useRef(null);
   const floatingElementsRef = useRef([]);
   const cardsRef = useRef([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   
-  const clientsData = {
+  // Default data if none provided
+  const data = clientsData || {
     title: "Commitment to Clients",
     cards: [
       { 
@@ -38,7 +40,16 @@ const Clients = () => {
     ]
   };
 
-  const { title, cards } = clientsData;
+  const { title, cards } = data;
+
+  console.log(title, cards);
+
+  // Set data loaded state when data changes
+  useEffect(() => {
+    if (clientsData) {
+      setIsDataLoaded(true);
+    }
+  }, [clientsData]);
 
   // Scroll animations
   const { scrollYProgress } = useScroll({
@@ -50,48 +61,55 @@ const Clients = () => {
   const titleY = useTransform(scrollYProgress, [0, 0.3], [100, 0]);
   const titleOpacity = useTransform(scrollYProgress, [0, 0.3, 0.6], [0, 1, 1]);
 
-  // GSAP animations on mount
+  // GSAP animations on mount and when data changes
   useEffect(() => {
+    // Only run animations if data is loaded
+    if (!isDataLoaded && !clientsData) return;
+
     const ctx = gsap.context(() => {
       // Animate floating background elements
       floatingElementsRef.current.forEach((el, i) => {
-        gsap.to(el, {
-          y: "random(-50, 50)",
-          x: "random(-40, 40)",
-          rotation: "random(-15, 15)",
-          duration: "random(5, 8)",
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          delay: i * 0.15
-        });
+        if (el) {
+          gsap.to(el, {
+            y: "random(-50, 50)",
+            x: "random(-40, 40)",
+            rotation: "random(-15, 15)",
+            duration: "random(5, 8)",
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+            delay: i * 0.15
+          });
+        }
       });
 
       // Title text reveal animation with 3D effect
       if (titleRef.current) {
         const titleChars = titleRef.current.querySelectorAll('.title-char');
-        gsap.fromTo(titleChars,
-          { 
-            y: 120, 
-            opacity: 0,
-            rotationX: -120,
-            scale: 0.5
-          },
-          {
-            y: 0,
-            opacity: 1,
-            rotationX: 0,
-            scale: 1,
-            duration: 0.6,
-            stagger: 0.03,
-            ease: "back.out(1.4)",
-            scrollTrigger: {
-              trigger: titleRef.current,
-              start: "top 80%",
-              toggleActions: "play none none reverse"
+        if (titleChars.length > 0) {
+          gsap.fromTo(titleChars,
+            { 
+              y: 120, 
+              opacity: 0,
+              rotationX: -120,
+              scale: 0.5
+            },
+            {
+              y: 0,
+              opacity: 1,
+              rotationX: 0,
+              scale: 1,
+              duration: 0.6,
+              stagger: 0.03,
+              ease: "back.out(1.4)",
+              scrollTrigger: {
+                trigger: titleRef.current,
+                start: "top 80%",
+                toggleActions: "play none none reverse"
+              }
             }
-          }
-        );
+          );
+        }
       }
 
       // Cards staggered entrance with magnetic effect on hover
@@ -152,15 +170,33 @@ const Clients = () => {
       });
     });
 
-    return () => ctx.revert();
-  }, []);
+    return () => {
+      ctx.revert();
+      // Clean up card event listeners
+      cardsRef.current.forEach((card) => {
+        if (card) {
+          card.removeEventListener('mousemove', () => {});
+          card.removeEventListener('mouseleave', () => {});
+        }
+      });
+    };
+  }, [isDataLoaded, clientsData]); // Re-run when data changes
+
+  // Force refresh ScrollTrigger when data changes
+  useEffect(() => {
+    if (isDataLoaded || clientsData) {
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 100);
+    }
+  }, [isDataLoaded, clientsData]);
 
   // Split title into characters for animation
-  const titleChars = title.split('').map((char, i) => (
+  const titleChars = title?.split('').map((char, i) => (
     <span key={i} className="title-char" style={{ display: 'inline-block' }}>
       {char === ' ' ? '\u00A0' : char}
     </span>
-  ));
+  )) || [];
 
   return (
     <div className="clients-wrapper" ref={sectionRef}>
@@ -220,7 +256,7 @@ const Clients = () => {
 
         {/* Cards Grid */}
         <div className="cards-grid">
-          {cards.map((card, idx) => (
+          {cards && cards.map((card, idx) => (
             <div
               key={idx}
               className="client-card"
@@ -238,7 +274,7 @@ const Clients = () => {
                 className="card-number"
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: card.delay + 0.3, duration: 0.5 }}
+                transition={{ delay: (card.delay || 0) + 0.3, duration: 0.5 }}
                 viewport={{ once: true }}
               >
                 {String(idx + 1).padStart(2, '0')}
@@ -249,7 +285,7 @@ const Clients = () => {
                 className="card-title"
                 initial={{ x: -40, opacity: 0 }}
                 whileInView={{ x: 0, opacity: 1 }}
-                transition={{ delay: card.delay + 0.2, duration: 0.6, ease: "easeOut" }}
+                transition={{ delay: (card.delay || 0) + 0.2, duration: 0.6, ease: "easeOut" }}
                 viewport={{ once: true }}
               >
                 {card.title}
@@ -260,7 +296,7 @@ const Clients = () => {
                 className="card-desc"
                 initial={{ y: 30, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
-                transition={{ delay: card.delay + 0.4, duration: 0.6 }}
+                transition={{ delay: (card.delay || 0) + 0.4, duration: 0.6 }}
                 viewport={{ once: true }}
               >
                 {card.desc}
@@ -271,7 +307,7 @@ const Clients = () => {
                 className="card-line"
                 initial={{ width: 0 }}
                 whileInView={{ width: "50px" }}
-                transition={{ delay: card.delay + 0.5, duration: 0.6 }}
+                transition={{ delay: (card.delay || 0) + 0.5, duration: 0.6 }}
                 viewport={{ once: true }}
               />
               
