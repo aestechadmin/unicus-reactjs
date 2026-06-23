@@ -1,9 +1,8 @@
 // Unicus.jsx - Complete with all sections
-import React, { useRef, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Box } from "@mui/material";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 import Lenis from "lenis";
 import Observer from "gsap/Observer";
 
@@ -21,6 +20,18 @@ import Clients from "./Unicus/Clients";
 import Process from "./Unicus/Process";
 
 gsap.registerPlugin(ScrollTrigger, Observer);
+
+const sectionIds = [
+  'hero',
+  'experience',
+  'growth-section',
+  'sectors-section',
+  'clients-section',
+  'process-section',
+  'quote-section',
+  'faq-section',
+  'footer-section',
+];
 
 // Website Data
 export const websiteData = {
@@ -71,12 +82,7 @@ export const websiteData = {
         "Digital reporting and analytics",
         "24/7 customer support"
       ],
-    },
-    description: {
-      id: 5,
-      type: "coming-soon-desc",
-      description: "Seamless door to door travel, all from a few taps on our app.",
-    },
+    }
   },
   growth: {
     id: 'growth',
@@ -90,7 +96,6 @@ export const websiteData = {
       { type: 'partner', name: 'Skilltyro', description: 'Industrial operations management', image: '/img/Img7.png' },
       { type: 'partner', name: 'DocTutorials', description: 'Corporate workspace solutions', image: '/img/Img11.png' }
     ],
-    listItems: ['KIMS', 'TNR Constructions', 'JIVI Towers', 'Tranquil', 'Skilltyro', 'DocTutorials']
   },
   technology: {
     backgroundImage: {
@@ -124,7 +129,6 @@ export const websiteData = {
         { type: 'service', name: 'Industrial Units', description: 'Robust facility management', image: '/img/Img5.png' },
         { type: 'service', name: 'Corporate Offices', description: 'Dedicated services for workspaces', image: '/img/Img5.png' }
       ],
-    listItems: ['Corporate Multispeciality Hospitals', 'Residential Apartments & Villas', 'Commercial Buildings', 'Educational Institutions', 'Industrial Units', 'Corporate Offices']
   },
    process:{
       id: 'process',
@@ -140,8 +144,7 @@ export const websiteData = {
         { type: 'service', name: 'Plumbing & Water Supply', description: 'Complete water system management', image: '/img/Img5.png' },
         { type: 'service', name: 'Gardening & Landscaping', description: 'Green space maintenance', image: '/img/Img5.png' }
       ],
-      listItems: ['Housekeeping', 'Security & Watch & Ward', 'Pest Control', 'Lift & Generator O&M', 'Electrical Maintenance', 'Civil Work Maintenance', 'Plumbing & Water Supply', 'Gardening & Landscaping']
-    },
+      },
   faq: {
     questions: [
       { q: "What facility management services do you offer?", a: "We offer comprehensive facility management including cleaning services, security, maintenance, housekeeping, pest control, and specialized manpower solutions for healthcare, commercial, residential, and corporate sectors." },
@@ -159,70 +162,103 @@ export default function Unicus() {
   const expSectionRef = useRef(null);
   const endTitleRef = useRef(null);
   const endButtonRef = useRef(null);
-  
+  const lenisRef = useRef(null);
+  const rafRef = useRef(null);
+
   const sections = [
     { id: 'hero', name: 'Home', ref: heroContainerRef },
     { id: 'experience', name: 'Why Unicus', ref: expSectionRef },
     { id: 'growth', name: 'Partners' },
     { id: 'sectors', name: 'Sectors' },
+    { id: 'clients', name: 'Clients' },
     { id: 'process', name: 'Process' },
     { id: 'quote', name: 'Quote' },
     { id: 'faq', name: 'FAQ' },
     { id: 'footer', name: 'Footer' },
   ];
 
-  useGSAP(() => {
+  const scrollToSection = useCallback((index) => {
+    const targetId = sectionIds[index];
+    if (!targetId) return;
+
+    const element = document.getElementById(targetId);
+    if (!element) return;
+
+    const offset = -90;
+
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(element, { offset, duration: 1.8 });
+      return;
+    }
+
+    const targetTop = element.getBoundingClientRect().top + window.scrollY + offset;
+    window.scrollTo({ top: targetTop, behavior: "smooth" });
+  }, []);
+
+  const handleSectionClick = useCallback((index) => {
+    setActiveSection(index);
+    scrollToSection(index);
+  }, [scrollToSection]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const lenis = new Lenis({
-      duration: 4,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -8 * t)),
+      duration: 3,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      smoothTouch: false,
+      smoothTouch: true,
       touchMultiplier: 0.3,
-      wheelMultiplier: 0.5,
+      wheelMultiplier: 0.28,
       normalizeWheel: true,
     });
 
-    function raf(time) {
+    lenisRef.current = lenis;
+
+    const scroller = document.scrollingElement || document.documentElement;
+
+    ScrollTrigger.scrollerProxy(scroller, {
+      scrollTop(value) {
+        if (arguments.length) {
+          lenis.scrollTo(value, { immediate: true });
+          return;
+        }
+        return lenis.scroll;
+      },
+      getBoundingClientRect() {
+        return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
+      },
+      pinType: scroller.style.transform ? "transform" : "fixed",
+    });
+
+    const raf = (time) => {
       lenis.raf(time);
       ScrollTrigger.update();
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-
-    // Smooth scroll to section when activeSection changes
-    const scrollToSection = () => {
-      const sectionIds = [
-        'hero',           // index 0 - Home
-        'experience',     // index 1 - Why Unicus
-        'growth-section', // index 2 - Partners
-        'sectors-section',// index 3 - Sectors
-        'process-section',// index 5 - Process
-        'quote-section',  // index 6 - Quote
-        'faq-section',    // index 7 - FAQ
-        'footer-section'  // index 8 - Footer
-      ];
-      const element = document.getElementById(sectionIds[activeSection]);
-      if (element) {
-        lenis.scrollTo(element, { offset: 0, duration: 1.5 });
-      }
+      rafRef.current = requestAnimationFrame(raf);
     };
-    
-    scrollToSection();
-    
-    setTimeout(() => {
+    rafRef.current = requestAnimationFrame(raf);
+
+    const refreshTimeout = setTimeout(() => {
       ScrollTrigger.refresh();
     }, 100);
 
     return () => {
+      clearTimeout(refreshTimeout);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
       ScrollTrigger.getAll().forEach((st) => st.kill());
       lenis.destroy();
+      lenisRef.current = null;
     };
-  }, [activeSection]);
+  }, []);
+
+  useEffect(() => {
+    scrollToSection(activeSection);
+  }, [activeSection, scrollToSection]);
 
   return (
     <Box sx={{ overflowX: "hidden" }}>
       <Header 
-        setActiveSection={setActiveSection} 
+        onSectionClick={handleSectionClick}
         activeSection={activeSection} 
         sections={sections}
       />
@@ -248,7 +284,7 @@ export default function Unicus() {
       </div>
       
       <div id="technology-section">
-        <Technology />
+        <Technology technologyData={websiteData.technology} />
       </div>
 
       <div id="sectors-section">

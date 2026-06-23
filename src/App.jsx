@@ -3,10 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import MainLayout from "./layouts/MainLayout";
-// import NewHome from "./pages/NewHome";
-import Home from "./pages/Home";
 import Unicus from "./pages/Unicus";
-import JobyVation from "./pages/JobyVation";
 import { Toaster } from "react-hot-toast";
 import ScrollToTop from "./utils/ScrollToTop";
 
@@ -28,10 +25,7 @@ function App() {
       <Routes>
         {/* ======================= MAIN WEBSITE ======================= */}
         <Route element={<MainLayout />}>
-          {/* <Route path="/" element={<NewHome />} /> */}
-          <Route path="home" element={<Home />} />
           <Route path="/" element={<Unicus />} />
-          <Route path="jovy" element={<JobyVation />} />
         </Route>
 
         {/* ======================= FALLBACK ======================= */}

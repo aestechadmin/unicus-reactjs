@@ -21,7 +21,13 @@ const Footer = () => {
   const [hasRevealed, setHasRevealed] = React.useState(false);
 
   const quickLinks = ['Explore', 'Privacy Policy', 'Terms of Use', 'Services', 'Sectors'];
-  const companyLinks = ['About', 'Clients', 'Process', 'FAQ', 'Contact'];
+  const companyLinks = [
+    { label: 'About', href: '#experience' },
+    { label: 'Clients', href: '#clients-section' },
+    { label: 'Process', href: '#process-section' },
+    { label: 'FAQ', href: '#faq-section' },
+    { label: 'Contact', href: '#footer-section' },
+  ];
   const socials = [
     { icon: <InstagramIcon />, link: 'https://instagram.com' },
     { icon: <YouTubeIcon />, link: 'https://youtube.com' },
@@ -132,6 +138,8 @@ const Footer = () => {
                 {companyLinks.map((item, i) => (
                   <motion.div key={i} custom={i + 11} initial="hidden" animate={hasRevealed ? "visible" : "hidden"} variants={progressiveRevealVariants}>
                     <Link 
+                      component="a"
+                      href={item.href}
                       underline="none" 
                       sx={{ 
                         color: '#fff', 
@@ -144,7 +152,7 @@ const Footer = () => {
                         '&:hover': { opacity: 1, transform: 'translateX(8px)', color: '#a0a0ff' } 
                       }}
                     >
-                      {item}
+                      {item.label}
                     </Link>
                   </motion.div>
                 ))}

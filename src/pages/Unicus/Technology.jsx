@@ -1,40 +1,22 @@
 // Technology.jsx - Updated with title animation and stats inside image
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import Lenis from '@studio-freight/lenis';
 
-const Technology = () => {
+const Technology = ({ technologyData }) => {
   const containerRef = useRef(null);
   const titleRef = useRef(null);
-  
-  // Data from your websiteData object (passed as props or imported)
-  const technologyData = {
-    backgroundImage: {
-      desktop: "https://cdn.sanity.io/images/h5mp19kq/production/fe892333d4c9a9934032f2ee33da32ac0f61211f-3200x1800.jpg?w=2000&fm=webp&q=90",
-      mobile: "https://cdn.sanity.io/images/h5mp19kq/production/bb2f1438061f5e799944e0ba4659720790d63bf2-1125x2250.jpg?rect=0,0,914,2250&w=750&fm=webp&q=90",
-    },
-    title: "Commitment to Clients",
-    items: [
-      { title: "Reliable & Compliant", desc: "Timely, regulation-adherent service" },
-      { title: "Flexible Scheduling", desc: "Customized workflows" },
-      { title: "Proactive Reporting", desc: "In-depth updates" },
-      { title: "Long-Term Partnerships", desc: "Focused on excellence" }
-    ],
-    stats: [
-      { value: "2022", label: "Founded" },
-      { value: "4", label: "Years" },
-      { value: "400+", label: "Clients" },
-      { value: "4Cr+", label: "Annual Turnover" },
-      { value: "2", label: "States Covered" }
-    ],
-  };
 
-  const { items, stats, title, backgroundImage } = technologyData;
+  const {
+    items = [],
+    stats = [],
+    title = "",
+    backgroundImage = {},
+  } = technologyData || {};
 
   const { scrollYProgress } = useScroll({
-  target: containerRef,
-  offset: ["start start", "end start"]
-});
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
 
 const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.5]);
   
@@ -46,10 +28,6 @@ const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.5]);
   
   const titleScale = useTransform(titleScrollProgress, [0, 0.5, 1], [0.5, 1, 1.5]);
   const titleOpacity = useTransform(titleScrollProgress, [0, 0.3, 0.8, 1], [0, 1, 1, 0]);
-  
-  // Item width for grid layout (no horizontal scroll)
-  const ITEM_WIDTH = 380;
-  const GAP = 30;
   
   return (
     <div className="technology-wrapper"  ref={containerRef} >
@@ -263,9 +241,6 @@ const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.5]);
         
         .stats-background {
           position: relative;
-        //   background-image: url(${backgroundImage.desktop});
-        //   background-size: cover;
-        //   background-position: center;
           border-radius: 24px;
           overflow: hidden;
         }
@@ -277,7 +252,6 @@ const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.5]);
         }
         
         .stats-overlay {
-        //   background: rgba(0, 0, 0, 0.6);
           padding: 80px 40px;
           border-radius: 24px;
         }

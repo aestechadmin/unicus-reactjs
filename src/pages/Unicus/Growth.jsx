@@ -2,10 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { websiteData } from "../Unicus";
-import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function Growth() {
   const sectionRef = useRef(null);
@@ -13,13 +10,10 @@ export default function Growth() {
   const containerRef = useRef(null);
   const pinTriggerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const scrollTimeoutRef = useRef(null);
 
   const data = websiteData?.growth;
   const partners = data?.slides?.filter((slide) => slide.type === "partner") || [];
   const titleSlide = data?.slides?.find((slide) => slide.type === "title");
-  const totalSlides = partners.length;
 
   const allSlides = [{ type: 'title', title: titleSlide?.title, isTitle: true }, ...partners];
   const totalItems = allSlides.length;
@@ -32,43 +26,45 @@ export default function Growth() {
   const progressBarWidth = useTransform(sectionScrollProgress, [0, 1], ["0%", "100%"]);
 
 
-useEffect(() => {
-  if (!pinRef.current || !containerRef.current) return;
+  useEffect(() => {
+    if (!pinRef.current || !containerRef.current) return;
 
-  if (pinTriggerRef.current) {
-    pinTriggerRef.current.kill();
-  }
-
-  const timer = setTimeout(() => {
-    pinTriggerRef.current = ScrollTrigger.create({
-      trigger: pinRef.current,
-      start: "top top",
-      end: "bottom bottom",
-      pin: containerRef.current,
-      pinSpacing: true,
-      scrub: 1,
-      invalidateOnRefresh: true,
-      snap: {
-        snapTo: 1 / (totalItems - 1),
-        duration: 0.3,
-        ease: "power1.out"
-      },
-      onUpdate: (self) => {
-        const index = Math.min(totalItems - 1, Math.round(self.progress * (totalItems - 1)));
-        setActiveIndex(index);
-      },
-    });
-    ScrollTrigger.refresh();
-  }, 100);
-
-  return () => {
-    clearTimeout(timer);
     if (pinTriggerRef.current) {
       pinTriggerRef.current.kill();
-      pinTriggerRef.current = null;
     }
-  };
-}, [totalItems]);
+
+    const scroller = document.scrollingElement || document.documentElement;
+
+    const timer = setTimeout(() => {
+      pinTriggerRef.current = ScrollTrigger.create({
+        trigger: pinRef.current,
+        scroller,
+        start: "top top",
+        end: "bottom bottom",
+        pin: containerRef.current,
+        pinSpacing: true,
+        scrub: 1,
+        invalidateOnRefresh: true,
+        snap: {
+          snapTo: 1 / (totalItems - 1),
+          duration: 0.2,
+          ease: "power1.out"
+        },
+        onUpdate: (self) => {
+          const index = Math.min(totalItems - 1, Math.round(self.progress * (totalItems - 1)));
+          setActiveIndex(index);
+        },
+      });
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      if (pinTriggerRef.current) {
+        pinTriggerRef.current.kill();
+        pinTriggerRef.current = null;
+      }
+    };
+  }, [totalItems]);
 
   if (!data || !partners.length) {
     return null;
@@ -105,7 +101,7 @@ const AnimatedTitle = ({ text }) => {
       variants={{
         hidden: { opacity: 1 },
         visible: { opacity: 1, transition: { staggerChildren: 0.05 } },
-        hidden: { opacity: 0, transition: { staggerChildren: 0.02 } }
+        exit: { opacity: 0, transition: { staggerChildren: 0.02 } }
       }}
     >
       <Typography
@@ -124,7 +120,7 @@ const AnimatedTitle = ({ text }) => {
             variants={{
               hidden: { opacity: 0, y: 50, rotateX: 90 },
               visible: { opacity: 1, y: 0, rotateX: 0 },
-              hidden: { opacity: 0, y: -50, rotateX: -90 }
+              exit: { opacity: 0, y: -50, rotateX: -90 }
             }}
             transition={{ duration: 0.5, ease: "easeOut" }}
             style={{ display: 'inline-block' }}

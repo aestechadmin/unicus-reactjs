@@ -8,7 +8,7 @@ import MapPin from '@mui/icons-material/LocationOnOutlined';
 import Mail from '@mui/icons-material/MailOutlineOutlined';
 import Phone from '@mui/icons-material/CallOutlined';
 
-function Header({ setActiveSection, activeSection, sections }) {
+function Header({ onSectionClick, activeSection, sections }) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   
@@ -63,7 +63,7 @@ useEffect(() => {
           </IconButton>
           
           {/* Logo */}
-          <Box onClick={() => { setActiveSection(0); setOpen(false); }} sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}>
+          <Box onClick={() => { onSectionClick(0); setOpen(false); }} sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}>
             <Box component="img" src="/img/Brands.png" sx={{ width: { xs: 35, md: 60 }, transition: 'transform 0.3s', '&:hover': { transform: 'scale(1.05)' } }} />
             <Typography sx={{ 
               fontSize: { xs: 22, md: 44 }, 
@@ -83,7 +83,7 @@ useEffect(() => {
           
           {/* Get Quote Button */}
           <Box 
-            onClick={() => { setActiveSection(6); setOpen(false); }} 
+            onClick={() => { onSectionClick(6); setOpen(false); }} 
             sx={{ 
               display: 'flex', 
               alignItems: 'center', 
@@ -146,12 +146,12 @@ useEffect(() => {
                 <CloseIcon sx={{ fontSize: 24 }} />
               </IconButton>
               
-              <Box onClick={() => { setActiveSection(0); setOpen(false); }} sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}>
+              <Box onClick={() => { onSectionClick(0); setOpen(false); }} sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}>
                 <Box component="img" src="/img/Brands.png" sx={{ width: { xs: 35, md: 60 } }} />
                 <Typography sx={{ fontSize: { xs: 20, md: 40 }, fontWeight: 700 }}>Unicus</Typography>
               </Box>
               
-              <Box onClick={() => { setActiveSection(6); setOpen(false); }} sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}>
+              <Box onClick={() => { onSectionClick(6); setOpen(false); }} sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}>
                 <Typography sx={{ fontSize: { xs: 12, md: 30 }, fontWeight: 700 }}>GET QUOTE</Typography>
                 <NorthEastIcon sx={{ fontSize: 24 }} />
               </Box>
@@ -213,7 +213,7 @@ useEffect(() => {
                       exit={{ opacity: 0, y: 80 }}
                     >
                       <Typography 
-                        onClick={() => { setActiveSection(item.index); setOpen(false); }} 
+                        onClick={() => { onSectionClick(item.index); setOpen(false); }} 
                         sx={{
                           fontSize: { xs: 32, md: 70 },
                           fontWeight: activeSection === item.index ? 900 : 500,

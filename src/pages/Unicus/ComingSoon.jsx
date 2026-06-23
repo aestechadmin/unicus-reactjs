@@ -3,7 +3,6 @@ import { Box, Typography, Container, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { motion, useScroll, useTransform } from "framer-motion";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { websiteData } from "../Unicus";
 
@@ -22,8 +21,6 @@ export default function ComingSoon() {
   const imageOpacity = useTransform(scrollYProgress, [0, 0.3, 0.7], [0.5, 1, 0.8]);
   const contentX = useTransform(scrollYProgress, [0, 0.5, 1], [50, 0, -30]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.3, 0.7], [0, 1, 1]);
-  const comingTextOpacity = useTransform(scrollYProgress, [0, 0.3, 0.5, 1], [0.5, 0.5, 1, 1]);
-  const comingTextScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 1.02]);
 
   useGSAP(() => {
     const ctx = gsap.context(() => {

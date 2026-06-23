@@ -24,16 +24,15 @@ const theme = createTheme({
     h1: {
       fontFamily: "'Figtree', sans-serif",
       fontWeight: 600,
-      fontSize: '1rem', // scale 1
+      fontSize: '1rem',
       lineHeight: '19px',
       letterSpacing: '0%',
-      textAlign: 'center',
     },
     body1: {
       fontFamily: "'Figtree', sans-serif",
       fontWeight: 600,
       fontSize: '1rem',
-      lineHeight: '19px',
+      lineHeight: 1.5,
       letterSpacing: '0%',
       textAlign: 'center',
     },
@@ -41,10 +40,9 @@ const theme = createTheme({
       fontFamily: "'Figtree', sans-serif",
       fontWeight: 600,
       fontSize: '1rem',
-      lineHeight: '19px',
+      lineHeight: 1.5,
       letterSpacing: '0%',
-      textAlign: 'center',
-      textTransform: 'none', // to prevent uppercase
+      textTransform: 'none',
     },
   },
 });

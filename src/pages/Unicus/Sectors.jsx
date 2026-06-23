@@ -13,13 +13,10 @@ export default function Sectors() {
   const containerRef = useRef(null);
   const pinTriggerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const scrollTimeoutRef = useRef(null);
 
   const data = websiteData?.sectors;
   const services = data?.slides?.filter((slide) => slide.type === "service") || [];
   const titleSlide = data?.slides?.find((slide) => slide.type === "title");
-  const totalSlides = services.length;
 
   const allSlides = [{ type: 'title', title: titleSlide?.title, isTitle: true }, ...services];
   const totalItems = allSlides.length;
@@ -38,9 +35,12 @@ export default function Sectors() {
       pinTriggerRef.current.kill();
     }
 
+    const scroller = document.scrollingElement || document.documentElement;
+
     const timer = setTimeout(() => {
       pinTriggerRef.current = ScrollTrigger.create({
         trigger: pinRef.current,
+        scroller,
         start: "top top",
         end: "bottom bottom",
         pin: containerRef.current,
@@ -49,7 +49,7 @@ export default function Sectors() {
         invalidateOnRefresh: true,
         snap: {
           snapTo: 1 / (totalItems - 1),
-          duration: 0.3,
+          duration: 0.2,
           ease: "power1.out"
         },
         onUpdate: (self) => {
@@ -57,7 +57,6 @@ export default function Sectors() {
           setActiveIndex(index);
         },
       });
-      ScrollTrigger.refresh();
     }, 100);
 
     return () => {
@@ -104,7 +103,7 @@ export default function Sectors() {
         variants={{
           hidden: { opacity: 1 },
           visible: { opacity: 1, transition: { staggerChildren: 0.05 } },
-          hidden: { opacity: 0, transition: { staggerChildren: 0.02 } }
+          exit: { opacity: 0, transition: { staggerChildren: 0.02 } }
         }}
       >
         <Typography
@@ -123,7 +122,7 @@ export default function Sectors() {
               variants={{
                 hidden: { opacity: 0, y: 50, rotateX: 90 },
                 visible: { opacity: 1, y: 0, rotateX: 0 },
-                hidden: { opacity: 0, y: -50, rotateX: -90 }
+                exit: { opacity: 0, y: -50, rotateX: -90 }
               }}
               transition={{ duration: 0.5, ease: "easeOut" }}
               style={{ display: 'inline-block' }}

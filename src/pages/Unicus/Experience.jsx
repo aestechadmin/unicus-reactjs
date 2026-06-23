@@ -2,7 +2,6 @@ import React, { useRef } from "react";
 import { Box, Typography, Container } from "@mui/material";
 import { motion, useScroll, useTransform } from "framer-motion";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { websiteData } from "../Unicus";
 
@@ -17,7 +16,7 @@ const AnimatedMainTitle = ({ title }) => {
 
   return (
     <motion.div ref={titleRef} style={{ scale: titleScale, opacity: titleOpacity, y: titleY, letterSpacing, textAlign: "center", width: "100%" }}>
-      <Typography variant="h1" sx={{ fontWeight: 900, fontSize: { xs: "2rem", sm: "3rem", md: "8rem", lg: "12rem" }, color: "#000", lineHeight: 1.8, width: "100%", textAlign: "center" }}>
+      <Typography variant="h1" sx={{ fontWeight: 700, fontSize: { xs: "2rem", sm: "3rem", md: "8rem", lg: "12rem" }, color: "#000", lineHeight: 1.8, width: "100%", textAlign: "center" }}>
         {words.map((word, wordIndex) => (
           <motion.span key={wordIndex} style={{ display: "inline-block", marginRight: "0.5rem" }}>
             {word.split("").map((char, charIndex) => (
@@ -178,7 +177,7 @@ const DescriptionOnlySlide = ({ slide }) => {
           variant="h3" 
           sx={{ 
             fontSize: { xs: "1.5rem", sm: "2.5rem", md: "3.5rem", lg: "7.5rem" }, 
-            fontWeight: 900, 
+            fontWeight: 700, 
             lineHeight: 1.4, 
             color: "#1a1a1a", 
             letterSpacing: "-0.02em", 

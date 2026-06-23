@@ -43,7 +43,7 @@ const FAQ = () => {
   }, []);
 
   return (
-    <Box ref={sectionRef} sx={{ height: '100%', width: '100%', overflow: 'auto' }}>
+    <Box ref={sectionRef} sx={{ minHeight: '100vh', width: '100%', overflow: 'visible' }}>
       <Box sx={{ minHeight: '100%', backgroundColor: '#F5F4DE', px: { xs: 2, sm: 3, md: 6 }, py: { xs: 4, md: 12 } }}>
         <motion.div
           initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
