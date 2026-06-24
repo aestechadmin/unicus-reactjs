@@ -56,7 +56,7 @@ function Header({ onSectionClick, activeSection, sections }) {
         elevation={0}
         sx={{
           top: { xs: 10, md: 20 },
-          background: 'transparent',
+          background: scrolled ? 'rgba(0,0,0,0.8)' : 'transparent',
           boxShadow: 'none',
           zIndex: 1200,
         }}
