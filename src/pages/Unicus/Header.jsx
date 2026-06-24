@@ -56,9 +56,9 @@ function Header({ onSectionClick, activeSection, sections }) {
         elevation={0}
         sx={{
           top: { xs: 10, md: 20 },
-          background: scrolled ? 'rgba(0,0,0,0.8)' : 'transparent',
+          background: 'transparent',
           boxShadow: 'none',
-          zIndex: 1200,
+          zIndex: scrolled ? 1200 : 1201,
         }}
       >
         <Toolbar sx={{
