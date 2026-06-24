@@ -8,7 +8,10 @@ import { websiteData } from "../Unicus";
 
 export default function ComingSoon() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+  const isDesktop = !isMobile && !isTablet;
+  
   const sectionRef = useRef(null);
   const titleRef = useRef(null);
   const featuresRef = useRef(null);
@@ -17,7 +20,7 @@ export default function ComingSoon() {
   const data = websiteData.comingSoon;
 
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
-  const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 1.1]);
+  const imageScale = useTransform(scrollYProgress, [0, 0.8, 1], [0.8, 1, 1.1]);
   const imageOpacity = useTransform(scrollYProgress, [0, 0.3, 0.7], [0.5, 1, 0.8]);
   const contentX = useTransform(scrollYProgress, [0, 0.5, 1], [50, 0, -30]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.3, 0.7], [0, 1, 1]);
@@ -48,45 +51,337 @@ export default function ComingSoon() {
   }, []);
 
   return (
-    <Box ref={sectionRef} component="section" sx={{ py: { xs: 8, md: 12 }, px: { xs: 2, md: 4 }, backgroundColor: "#F5F4DE", position: "relative", overflow: "hidden" }}>
+    <Box ref={sectionRef} component="section" sx={{ 
+      py: { xs: 6, sm: 8, md: 12 }, 
+      px: { xs: 2, sm: 3, md: 4 }, 
+      backgroundColor: "#F5F4DE", 
+      position: "relative", 
+      overflow: "hidden",
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+    }}>
       <Container maxWidth="xl">
-        <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: { xs: 4, md: 6 }, alignItems: "center" }}>
-          <Box sx={{ flex: { xs: "1 1 100%", md: "1 1 100%" }, position: "relative" }}>
-            <motion.div style={{ scale: imageScale, opacity: imageOpacity }}>
-              <Box component="img" src={data.feature.mainImage} alt="Coming soon preview" sx={{ width: "100%", height: "auto", borderRadius: "24px", boxShadow: "0 20px 40px rgba(0,0,0,0.15)", display: "block" }} />
-            </motion.div>
-          </Box>
-          <Box sx={{ flex: { xs: "1 1 100%", md: "1 1 35%" } }}>
-            <motion.div style={{ x: contentX, opacity: contentOpacity }}>
-              {!isMobile && (
+        {/* ─── DESKTOP LAYOUT ─── */}
+        {isDesktop && (
+          <Box sx={{ display: "flex", flexDirection: "row", gap: 6, alignItems: "center" }}>
+            {/* Left - Image */}
+            <Box sx={{ flex: "1 1 65%", position: "relative" }}>
+              <motion.div style={{ scale: imageScale, opacity: imageOpacity }}>
+                <Box 
+                  component="img" 
+                  src={data.feature.mainImage} 
+                  alt="Coming soon preview" 
+                  sx={{ 
+                    width: "100%", 
+                    height: "auto", 
+                    borderRadius: "24px", 
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.15)", 
+                    display: "block" 
+                  }} 
+                />
+              </motion.div>
+            </Box>
+            
+            {/* Right - Content */}
+            <Box sx={{ flex: "1 1 20%" }}>
+              <motion.div style={{ x: contentX, opacity: contentOpacity }}>
+                {/* App Icon */}
                 <Box sx={{ mb: 4, maxWidth: "100%" }}>
-                  <Box component="img" src={data.feature.appIcon} alt="App icon" sx={{ width: "100%", height: "auto", borderRadius: "16px", boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }} />
+                  <Box 
+                    component="img" 
+                    src={data.feature.appIcon} 
+                    alt="App icon" 
+                    sx={{ 
+                      width: "100%", 
+                      height: "auto", 
+                      borderRadius: "16px", 
+                      boxShadow: "0 10px 20px rgba(0,0,0,0.1)" 
+                    }} 
+                  />
                 </Box>
-              )}
-              <Typography ref={descriptionRef} variant="body1" sx={{ fontSize: { xs: "1rem", md: "2rem" }, lineHeight: 1.6, color: "#666", mb: 4, textAlign: "justify" }}>
-                {data.feature.description.split("").map((char, index) => (<span key={index} className="desc-char-coming" style={{ display: "inline-block", whiteSpace: "pre", opacity: 0, transform: "translateY(30px)" }}>{char === " " ? "\u00A0" : char}</span>))}
-              </Typography>
-              <Box ref={featuresRef}>
-                {data.feature.features.map((feature, index) => (
-                  <Box key={index} className="feature-item" sx={{ display: "flex", alignItems: "center", mb: 2, opacity: 0, transform: "translateX(-30px)" }}>
-                    <Box sx={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#000", mr: 2 }} />
-                    <Typography variant="body2" sx={{ fontSize: { xs: "0.9rem", md: "1.7rem" }, color: "#555" }}>{feature}</Typography>
-                  </Box>
-                ))}
-              </Box>
-              {isMobile && (
-                <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-                  <Box component="img" src={data.feature.appIcon} alt="App icon" sx={{ width: "80px", height: "auto", borderRadius: "16px", boxShadow: "0 10px 20px rgba(0,0,0,0.1)" }} />
+                
+                {/* Description */}
+                <Typography 
+                  ref={descriptionRef} 
+                  variant="body1" 
+                  sx={{ 
+                    fontSize: "1.5rem", 
+                    lineHeight: 1.6, 
+                    color: "#666", 
+                    mb: 4, 
+                    textAlign: "justify" 
+                  }}
+                >
+                  {data.feature.description.split("").map((char, index) => (
+                    <span 
+                      key={index} 
+                      className="desc-char-coming" 
+                      style={{ 
+                        display: "inline-block", 
+                        whiteSpace: "pre", 
+                        opacity: 0, 
+                        transform: "translateY(30px)" 
+                      }}
+                    >
+                      {char === " " ? "\u00A0" : char}
+                    </span>
+                  ))}
+                </Typography>
+                
+                {/* Features List */}
+                <Box >
+                  {data.feature.features.map((feature, index) => (
+                    <Box 
+                      key={index} 
+                      className="feature-item" 
+                      sx={{ 
+                        display: "flex", 
+                        alignItems: "center", 
+                        mb: 2, 
+                      }}
+                    >
+                      <Box sx={{ 
+                        width: 6, 
+                        height: 6, 
+                        borderRadius: "50%", 
+                        backgroundColor: "#000", 
+                        mr: 2,
+                        flexShrink: 0,
+                      }} />
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
+                          fontSize: "1.3rem", 
+                          color: "#555" 
+                        }}
+                      >
+                        {feature}
+                      </Typography>
+                    </Box>
+                  ))}
                 </Box>
-              )}
-            </motion.div>
+              </motion.div>
+            </Box>
           </Box>
-        </Box>
-        {/* <motion.div style={{ opacity: comingTextOpacity, scale: comingTextScale, marginTop: "4rem", textAlign: "center" }}>
-          <Typography ref={comingTextRef} variant="h4" sx={{ fontSize: { xs: "1.2rem", sm: "1.5rem", md: "2rem" }, fontWeight: 500, color: "#666", fontStyle: "italic" }}>
-            {data.description.description.split("").map((char, idx) => (<span key={idx} className="coming-desc-char" style={{ display: "inline-block", whiteSpace: "pre", opacity: 0.5 }}>{char === " " ? "\u00A0" : char}</span>))}
-          </Typography>
-        </motion.div> */}
+        )}
+
+        {/* ─── TABLET LAYOUT ─── */}
+        {isTablet && !isMobile && (
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 4, alignItems: "center" }}>
+            {/* Image */}
+            <Box sx={{ width: "100%", position: "relative" }}>
+              <motion.div style={{ scale: imageScale, opacity: imageOpacity }}>
+                <Box 
+                  component="img" 
+                  src={data.feature.mainImage} 
+                  alt="Coming soon preview" 
+                  sx={{ 
+                    width: "100%", 
+                    height: "auto", 
+                    borderRadius: "20px", 
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.15)", 
+                    display: "block" 
+                  }} 
+                />
+              </motion.div>
+            </Box>
+            
+            {/* Content */}
+            <Box sx={{ width: "100%" }}>
+              <motion.div style={{ x: contentX, opacity: contentOpacity }}>
+                {/* App Icon - Center */}
+                <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+                  <Box 
+                    component="img" 
+                    src={data.feature.appIcon} 
+                    alt="App icon" 
+                    sx={{ 
+                      width: "120px", 
+                      height: "auto", 
+                      borderRadius: "16px", 
+                      boxShadow: "0 10px 20px rgba(0,0,0,0.1)" 
+                    }} 
+                  />
+                </Box>
+                
+                {/* Description */}
+                <Typography 
+                  ref={descriptionRef} 
+                  variant="body1" 
+                  sx={{ 
+                    fontSize: "1.2rem", 
+                    lineHeight: 1.6, 
+                    color: "#666", 
+                    mb: 3, 
+                    textAlign: "center" 
+                  }}
+                >
+                  {data.feature.description.split("").map((char, index) => (
+                    <span 
+                      key={index} 
+                      className="desc-char-coming" 
+                      style={{ 
+                        display: "inline-block", 
+                        whiteSpace: "pre", 
+                        opacity: 0, 
+                        transform: "translateY(30px)" 
+                      }}
+                    >
+                      {char === " " ? "\u00A0" : char}
+                    </span>
+                  ))}
+                </Typography>
+                
+                {/* Features List - Grid */}
+                <Box ref={featuresRef} sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+                  {data.feature.features.map((feature, index) => (
+                    <Box 
+                      key={index} 
+                      className="feature-item" 
+                      sx={{ 
+                        display: "flex", 
+                        alignItems: "center", 
+                        opacity: 0, 
+                        transform: "translateX(-30px)",
+                        p: 1,
+                        backgroundColor: "rgba(255,255,255,0.5)",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      <Box sx={{ 
+                        width: 6, 
+                        height: 6, 
+                        borderRadius: "50%", 
+                        backgroundColor: "#000", 
+                        mr: 2,
+                        flexShrink: 0,
+                      }} />
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
+                          fontSize: "1rem", 
+                          color: "#555" 
+                        }}
+                      >
+                        {feature}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </motion.div>
+            </Box>
+          </Box>
+        )}
+
+        {/* ─── MOBILE LAYOUT ─── */}
+        {isMobile && (
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3, alignItems: "center" }}>
+            {/* Image */}
+            <Box sx={{ width: "100%", position: "relative" }}>
+              <motion.div style={{ scale: imageScale, opacity: imageOpacity }}>
+                <Box 
+                  component="img" 
+                  src={data.feature.mainImage} 
+                  alt="Coming soon preview" 
+                  sx={{ 
+                    width: "100%", 
+                    height: "auto", 
+                    borderRadius: "16px", 
+                    boxShadow: "0 15px 30px rgba(0,0,0,0.12)", 
+                    display: "block" 
+                  }} 
+                />
+              </motion.div>
+            </Box>
+            
+            {/* Content */}
+            <Box sx={{ width: "100%" }}>
+              <motion.div style={{ x: contentX, opacity: contentOpacity }}>
+                {/* App Icon - Small */}
+                <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+                  <Box 
+                    component="img" 
+                    src={data.feature.appIcon} 
+                    alt="App icon" 
+                    sx={{ 
+                      width: "100%", 
+                      height: "auto", 
+                      borderRadius: "12px", 
+                      boxShadow: "0 8px 16px rgba(0,0,0,0.1)" 
+                    }} 
+                  />
+                </Box>
+                
+                {/* Description */}
+                <Typography 
+                  ref={descriptionRef} 
+                  variant="body1" 
+                  sx={{ 
+                    fontSize: "1.3rem", 
+                    lineHeight: 1.6, 
+                    color: "#666", 
+                    mb: 2, 
+                    textAlign: "center" 
+                  }}
+                >
+                  {data.feature.description.split("").map((char, index) => (
+                    <span 
+                      key={index} 
+                      className="desc-char-coming" 
+                      style={{ 
+                        display: "inline-block", 
+                        whiteSpace: "pre", 
+                        opacity: 0, 
+                        transform: "translateY(30px)" 
+                      }}
+                    >
+                      {char === " " ? "\u00A0" : char}
+                    </span>
+                  ))}
+                </Typography>
+                
+                {/* Features List */}
+                <Box ref={featuresRef}>
+                  {data.feature.features.map((feature, index) => (
+                    <Box 
+                      key={index} 
+                      className="feature-item" 
+                      sx={{ 
+                        display: "flex", 
+                        alignItems: "center", 
+                        mb: 1.5, 
+                        opacity: 0, 
+                        transform: "translateX(-30px)",
+                        p: 1,
+                        backgroundColor: "rgba(255,255,255,0.5)",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      <Box sx={{ 
+                        width: 5, 
+                        height: 5, 
+                        borderRadius: "50%", 
+                        backgroundColor: "#000", 
+                        mr: 1.5,
+                        flexShrink: 0,
+                      }} />
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
+                          fontSize: "1.1rem", 
+                          color: "#555" 
+                        }}
+                      >
+                        {feature}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </motion.div>
+            </Box>
+          </Box>
+        )}
       </Container>
     </Box>
   );
