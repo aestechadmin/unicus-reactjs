@@ -151,8 +151,9 @@ const Quote = () => {
               fontSize: { xs: 22, sm: 28, md: 38, lg: 44 },
               fontWeight: 700,
               mb: 1,
+              textAlign: { xs: 'center', md: 'left' },
             }}>
-              Get a Quote Now
+              Contact Us
             </Typography>
           </motion.div>
 
@@ -166,6 +167,7 @@ const Quote = () => {
               color: 'rgba(255,255,255,0.7)',
               fontSize: { xs: 13, sm: 14, md: 17 },
               lineHeight: 1.6,
+              textAlign: { xs: 'center', md: 'left' },
             }}>
               Get a Quote Immediately Upon Form Submission
             </Typography>

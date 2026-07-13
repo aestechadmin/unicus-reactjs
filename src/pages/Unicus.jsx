@@ -18,19 +18,19 @@ import Header from "./Unicus/Header";
 import Sectors from "./Unicus/Sectors";
 import Clients from "./Unicus/Clients";
 import Process from "./Unicus/Process";
+import AboutUs from "./Unicus/AboutUs";
 
 gsap.registerPlugin(ScrollTrigger, Observer);
 
 const sectionIds = [
-  'hero',
-  'experience',
-  'growth-section',
-  'sectors-section',
-  'clients-section',
-  'process-section',
-  'quote-section',
-  'faq-section',
-  'footer-section',
+   "hero",
+  "about-us",
+  "experience",
+  "sectors-section",
+  "process-section",
+  "growth-section",
+  "clients-section",
+  "quote-section",
 ];
 
 // Website Data
@@ -47,48 +47,29 @@ export const websiteData = {
     {
       id: 1,
       type: "image",
-      image: "/img/array2.png",
+      image: "/img/experience1.png",
       alt: "Deep specialization",
-      description: "Deep specialization in hospital and medical college sanitation and security",
+      description: "Deep specialization in hospital and medical college sanitation and security 4 a rare differentiator in the manpower sector",
     },
     {
       id: 2,
       type: "image",
-      image: "/img/Img1.png",
+      image: "/img/experience2.png",
       alt: "Smart facility management",
-      description: "Leverage cutting-edge technology to optimize your facility operations.",
+      description: "Medical-grade cleaning equipment and technologies meeting strict healthcare specifications",
     },
     {
       id: 3,
       type: "image",
-      image: "/img/Img3.png",
+      image: "/img/experience3.png",
       alt: "Sustainable solutions",
-      description: "Eco-friendly practices that protect our planet.",
-    },
-    {
-      id: 4,
-      type: "description",
-      description: "UNICUS Security Services Pvt Ltd is a dedicated manpower agency",
-    },
-  ],
-  comingSoon: {
-    feature: {
-      mainImage: "/img/Img4.png",
-      appIcon: "/img/Img3.png",
-      description: "Uncompromising focus on quality and reliability",
-      features: [
-        "Real-time service tracking",
-        "Instant booking and scheduling",
-        "Digital reporting and analytics",
-        "24/7 customer support"
-      ],
+      description: "Medical-grade cleaning equipment and technologies meeting strict healthcare specifications Contact Us",
     }
-  },
+  ],
   growth: {
     id: 'growth',
     name: 'Growth',
     slides: [
-      { type: 'title', title: 'With partners like this,\nthere\'s nowhere to go but the best' },
       { type: 'partner', name: 'KIMS', description: 'Healthcare-grade facilities management', image: '/img/Img6.png' },
       { type: 'partner', name: 'TNR Constructions', description: 'Residential community solutions', image: '/img/Img9.png' },
       { type: 'partner', name: 'JIVI Towers', description: 'Commercial facility services', image: '/img/Img8.png' },
@@ -121,21 +102,7 @@ export const websiteData = {
     id: 'sectors',
     name: 'Sectors',
     slides: [
-        { type: 'title', title: 'Sectors We Serve' },
-        { type: 'service', name: 'Corporate Multispeciality Hospitals', description: 'Healthcare-grade facilities management', image: '/img/Img5.png' },
-        { type: 'service', name: 'Residential Apartments & Villas', description: 'Comprehensive facility maintenance', image: '/img/Img5.png' },
-        { type: 'service', name: 'Commercial Buildings', description: 'Professional services for office spaces', image: '/img/Img5.png' },
-        { type: 'service', name: 'Educational Institutions', description: 'Specialized support for schools', image: '/img/Img5.png' },
-        { type: 'service', name: 'Industrial Units', description: 'Robust facility management', image: '/img/Img5.png' },
-        { type: 'service', name: 'Corporate Offices', description: 'Dedicated services for workspaces', image: '/img/Img5.png' }
-      ],
-  },
-   process:{
-      id: 'process',
-      name: 'Process',
-      slides: [
-        { type: 'title', title: 'Specialized Services' },
-        { type: 'service', name: 'Housekeeping', description: 'Professional cleaning for all facility areas', image: '/img/Img5.png' },
+       { type: 'service', name: 'Housekeeping', description: 'Professional cleaning for all facility areas', image: '/img/Img5.png' },
         { type: 'service', name: 'Security & Watch & Ward', description: 'Trained security personnel', image: '/img/Img5.png' },
         { type: 'service', name: 'Pest Control', description: 'Health-regulation compliant services', image: '/img/Img5.png' },
         { type: 'service', name: 'Lift & Generator O&M', description: 'Preventive maintenance', image: '/img/Img5.png' },
@@ -143,6 +110,19 @@ export const websiteData = {
         { type: 'service', name: 'Civil Work Maintenance', description: 'Structural repairs', image: '/img/Img5.png' },
         { type: 'service', name: 'Plumbing & Water Supply', description: 'Complete water system management', image: '/img/Img5.png' },
         { type: 'service', name: 'Gardening & Landscaping', description: 'Green space maintenance', image: '/img/Img5.png' }
+      ],
+  },
+   process:{
+      id: 'process',
+      name: 'Process',
+      slides: [
+        { type: 'title', title: 'Specialized Services' },
+        { type: 'service', name: 'Corporate Multispeciality Hospitals', description: 'Healthcare-grade facilities management', image: '/img/Img5.png' },
+        { type: 'service', name: 'Residential Apartments & Villas', description: 'Comprehensive facility maintenance', image: '/img/Img5.png' },
+        { type: 'service', name: 'Commercial Buildings', description: 'Professional services for office spaces', image: '/img/Img5.png' },
+        { type: 'service', name: 'Educational Institutions', description: 'Specialized support for schools', image: '/img/Img5.png' },
+        { type: 'service', name: 'Industrial Units', description: 'Robust facility management', image: '/img/Img5.png' },
+        { type: 'service', name: 'Corporate Offices', description: 'Dedicated services for workspaces', image: '/img/Img5.png' }
       ],
     },
     clients: {  // <-- ADD THIS SECTION
@@ -191,16 +171,15 @@ export default function Unicus() {
   const rafRef = useRef(null);
 
   const sections = [
-    { id: 'hero', name: 'Home', ref: heroContainerRef },
-    { id: 'experience', name: 'Why Unicus', ref: expSectionRef },
-    { id: 'growth', name: 'Partners' },
-    { id: 'sectors', name: 'Sectors' },
-    { id: 'clients', name: 'Clients' },
-    { id: 'process', name: 'Process' },
-    { id: 'quote', name: 'Quote' },
-    { id: 'faq', name: 'FAQ' },
-    { id: 'footer', name: 'Footer' },
-  ];
+  { id: "hero", name: "Home" },
+  { id: "about-us", name: "Vision & Company" },
+  { id: "experience", name: "Why Unicus Facilities?" },
+  { id: "sectors-section", name: "Service" },
+  { id: "process-section", name: "Sector" },
+  { id: "growth-section", name: "Clients" },
+  { id: "clients-section", name: "How We Work" },
+  { id: 'faq-section', name: 'FAQ' },
+];
 
   const scrollToSection = useCallback((index) => {
     const targetId = sectionIds[index];
@@ -285,7 +264,7 @@ export default function Unicus() {
   }, [activeSection, scrollToSection]);
 
   return (
-    <Box sx={{ overflowX: "hidden" }}>
+    <Box sx={{ overflowX: "hidden", background: '#E6F1FE' }}>
       <Header 
         onSectionClick={handleSectionClick}
         activeSection={activeSection} 
@@ -294,6 +273,10 @@ export default function Unicus() {
       
       <div id="hero">
         <Hero heroContainerRef={heroContainerRef} />
+      </div>
+
+      <div id="about-us">
+        <AboutUs />
       </div>
       
       <div id="experience">
@@ -304,33 +287,33 @@ export default function Unicus() {
         />
       </div>
       
-      <div id="coming-soon-section">
+      {/* <div id="coming-soon-section">
         <ComingSoon />
-      </div>
-      
-      <div id="growth-section">
-        <Growth />
-      </div>
-      
-      <div id="technology-section">
-        <Technology technologyData={websiteData.technology} />
-      </div>
+      </div> */}
 
       <div id="sectors-section">
         <Sectors />
       </div>
 
+      <div id="process-section">
+        <Process />
+      </div>
+            
+      <div id="growth-section">
+        <Growth />
+      </div>
+      
+      {/* <div id="technology-section">
+        <Technology technologyData={websiteData.technology} />
+      </div> */}
+
       <div id="clients-section">
         <Clients clientsData={websiteData.clients}/>
       </div>
 
-      <div id="process-section">
-        <Process />
-      </div>
-
-      <div id="faq-section">
+      {/* <div id="faq-section">
         <FAQ />
-      </div>
+      </div> */}
       
       <div id="quote-section">
         <Quote />

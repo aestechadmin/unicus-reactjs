@@ -124,7 +124,7 @@ function Header({ onSectionClick, activeSection, sections }) {
 
           {/* Get Quote */}
           <Box
-            onClick={() => { onSectionClick(6); setOpen(false); }}
+            onClick={() => { onSectionClick(7); setOpen(false); }}
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -222,7 +222,7 @@ function Header({ onSectionClick, activeSection, sections }) {
 
               {/* Get Quote */}
               <Box
-                onClick={() => { onSectionClick(6); setOpen(false); }}
+                onClick={() => { onSectionClick(7); setOpen(false); }}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
@@ -266,7 +266,7 @@ function Header({ onSectionClick, activeSection, sections }) {
                       <Typography
                         onClick={() => { onSectionClick(item.index); setOpen(false); }}
                         sx={{
-                          fontSize: { xs: 26, sm: 36, md: 55, lg: 70 },
+                          fontSize: { xs: 26, sm: 36, md: 55, lg: 60 },
                           fontWeight: activeSection === item.index ? 900 : 500,
                           lineHeight: { xs: 1.2, md: 1 },
                           cursor: 'pointer',
@@ -274,7 +274,7 @@ function Header({ onSectionClick, activeSection, sections }) {
                           width: 'fit-content',
                           transition: 'all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1)',
                           color: activeSection === item.index ? '#fff' : 'rgba(255,255,255,0.6)',
-                          pl: { xs: '30px', md: '70px' },
+                          pl: { xs: '30px', md: '50px' },
 
                           '&::before': {
                             content: `"0${index + 1}"`,
@@ -289,7 +289,7 @@ function Header({ onSectionClick, activeSection, sections }) {
                           '&::after': {
                             content: '""',
                             position: 'absolute',
-                            left: { xs: '30px', md: '70px' },
+                            left: { xs: '30px', md: '50px' },
                             bottom: { xs: -2, md: -8 },
                             width: activeSection === item.index ? '100%' : 0,
                             height: { xs: 2, md: 5 },
@@ -298,7 +298,7 @@ function Header({ onSectionClick, activeSection, sections }) {
                             transition: '0.5s',
                           },
                           '&:hover': {
-                            transform: { xs: 'translateX(8px)', md: 'translateX(30px)' },
+                            transform: { xs: 'translateX(8px)', md: 'translateX(20px)' },
                             letterSpacing: { xs: 1, md: 4 },
                             color: '#fff',
                           },

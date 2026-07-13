@@ -1,429 +1,431 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Box, Typography, useMediaQuery } from "@mui/material";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import React, { useEffect, useRef } from "react";
+import { Box, Typography, Button, useTheme } from "@mui/material";
+import { motion } from "framer-motion";
 import { websiteData } from "../Unicus";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  LocalHospital,
+  Home,
+  Business,
+  School,
+  Factory,
+  CorporateFare,
+  CleaningServices,
+  Security,
+  PestControl,
+  ElectricalServices,
+  Plumbing,
+  Grass,
+  ArrowForward,
+  // Process-specific icons
+  Assignment,
+  Handshake,
+  Settings,
+  CheckCircle,
+  Description,
+  People,
+  Build,
+  Verified,
+  EmojiEvents,
+  TrendingUp,
+  SupportAgent,
+  Speed,
+  Analytics,
+  Lightbulb,
+  Star,
+  Rocket,
+  Shield,
+  Headset,
+  ThumbUp,
+} from "@mui/icons-material";
+
+// Icon mapping for process steps
+const processIconMap = {
+  "Consultation": <Assignment />,
+  "Site Assessment": <Description />,
+  "Customized Planning": <Settings />,
+  "Implementation": <Build />,
+  "Quality Assurance": <Verified />,
+  "Ongoing Support": <SupportAgent />,
+  "Feedback & Improvement": <Analytics />,
+  "Client Satisfaction": <EmojiEvents />,
+  "Strategy Development": <Lightbulb />,
+  "Team Deployment": <People />,
+  "Execution": <Rocket />,
+  "Monitoring": <Speed />,
+  "Partnership": <Handshake />,
+  "Excellence": <Star />,
+  "Growth": <TrendingUp />,
+  "Protection": <Shield />,
+  "Success": <ThumbUp />,
+  "Innovation": <TrendingUp />,
+  "Reliability": <Verified />,
+  "Efficiency": <Speed />,
+};
+
+// Default icon if no match found
+const defaultProcessIcon = <Assignment />;
 
 export default function Process() {
+  const theme = useTheme();
   const sectionRef = useRef(null);
-  const pinRef = useRef(null);
-  const containerRef = useRef(null);
-  const pinTriggerRef = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  
-  // Responsive detection
-  const isMobile = useMediaQuery('(max-width:600px)');
-  const isTablet = useMediaQuery('(max-width:960px)');
-  const isDesktop = !isMobile && !isTablet;
-
   const data = websiteData?.process;
-  const services = data?.slides?.filter((slide) => slide.type === "service") || [];
-  const titleSlide = data?.slides?.find((slide) => slide.type === "title");
-  const allSlides = [{ type: 'title', title: titleSlide?.title, isTitle: true }, ...services];
-  const totalItems = allSlides.length;
+  // Filter for process steps - you might need to adjust this based on your data structure
+  const processSteps = data?.slides?.filter((slide) => slide.type === "process") || [];
 
-  const { scrollYProgress: sectionScrollProgress } = useScroll({
-    target: sectionRef, offset: ["start start", "end end"]
-  });
-  const progressBarWidth = useTransform(sectionScrollProgress, [0, 1], ["0%", "100%"]);
+  // If no process data, use the services data as fallback
+  const items = processSteps.length > 0 ? processSteps : data?.slides?.filter((slide) => slide.type === "service") || [];
 
-  useEffect(() => {
-    if (!pinRef.current || !containerRef.current) return;
-    if (pinTriggerRef.current) pinTriggerRef.current.kill();
-    const scroller = document.scrollingElement || document.documentElement;
-    const timer = setTimeout(() => {
-      pinTriggerRef.current = ScrollTrigger.create({
-        trigger: pinRef.current, scroller,
-        start: "top top", end: "bottom bottom",
-        pin: containerRef.current, pinSpacing: true,
-        scrub: 1, invalidateOnRefresh: true,
-        snap: { snapTo: 1 / (totalItems - 1), duration: 0.2, ease: "power1.out" },
-        onUpdate: (self) => {
-          const index = Math.min(totalItems - 1, Math.round(self.progress * (totalItems - 1)));
-          setActiveIndex(index);
-        },
-      });
-    }, 100);
-    return () => {
-      clearTimeout(timer);
-      if (pinTriggerRef.current) { pinTriggerRef.current.kill(); pinTriggerRef.current = null; }
-    };
-  }, [totalItems]);
+  if (!data || !items.length) return null;
 
-  if (!data || !services.length) return null;
-
-  // Web variants (unchanged)
-  const imageVariants = {
-    hidden: { opacity: 0, scale: 0.95, y: 20 },
-    visible: { opacity: 1, scale: 1, y: 0 }
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.1,
+      },
+    },
   };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.1, 0.25, 1],
+      },
+    },
+    hover: {
+      y: -8,
+      boxShadow: "0 20px 50px rgba(0,0,0,0.15)",
+      transition: {
+        duration: 0.3,
+        ease: "easeInOut",
+      },
+    },
+  };
+
   const titleVariants = {
-    hidden: { opacity: 0, y: 50, scale: 0.9 },
-    visible: { opacity: 1, y: 0, scale: 1 }
-  };
-  const descriptionVariants = {
-    hidden: { opacity: 0, y: 30, filter: "blur(10px)" },
-    visible: { opacity: 1, y: 0, filter: "blur(0px)" }
-  };
-
-  // Mobile/Tablet variants
-  const mobileImageVariants = {
-    hidden: { opacity: 0, scale: 0.8, y: 30 },
-    visible: { opacity: 1, scale: 1, y: 0 }
-  };
-  const mobileTitleVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.9 },
-    visible: { opacity: 1, y: 0, scale: 1 }
-  };
-  const mobileDescriptionVariants = {
-    hidden: { opacity: 0, y: 20, filter: "blur(5px)" },
-    visible: { opacity: 1, y: 0, filter: "blur(0px)" }
+    hidden: { opacity: 0, x: -50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.25, 0.1, 0.25, 1],
+      },
+    },
   };
 
-  const AnimatedTitle = ({ text }) => {
-    const characters = text.split('');
-    return (
-      <motion.div
-        initial="hidden" animate="visible" exit="hidden"
-        variants={{
-          hidden: { opacity: 1 },
-          visible: { opacity: 1, transition: { staggerChildren: 0.04 } },
-          exit: { opacity: 0 }
-        }}
-      >
-        <Typography sx={{
-          fontSize: { xs: "1.6rem", sm: "2.2rem", md: "4.5rem", lg: "7rem" },
-          fontWeight: 700, textAlign: "center", whiteSpace: "pre-line",
-          color: "#000", lineHeight: 1.3, px: { xs: 2, md: 0 },
-        }}>
-          {characters.map((char, index) => (
-            <motion.span
-              key={index}
-              variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              style={{ display: 'inline-block' }}
-            >
-              {char === ' ' ? '\u00A0' : char}
-            </motion.span>
-          ))}
-        </Typography>
-      </motion.div>
-    );
+  const buttonVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        delay: 0.6,
+        ease: [0.25, 0.1, 0.25, 1],
+      },
+    },
+    hover: {
+      scale: 1.05,
+      transition: {
+        duration: 0.3,
+        ease: "easeInOut",
+      },
+    },
+    tap: {
+      scale: 0.95,
+    },
+  };
+
+  // Scroll to Quote section
+  const scrollToQuote = () => {
+    const quoteSection = document.getElementById("quote-section");
+    if (quoteSection) {
+      quoteSection.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
-    <Box ref={sectionRef} sx={{
-      backgroundColor: "#F5F4DE", position: "relative",
-      zIndex: 1, overflowX: "hidden", minHeight: "100vh",
-    }}>
-      <motion.div style={{
-        position: "absolute", top: 0, left: 0, right: 0,
-        height: "3px", background: "#000", transformOrigin: "0%",
-        scaleX: progressBarWidth, zIndex: 100,
-      }} />
+    <Box
+      ref={sectionRef}
+      sx={{
+        position: "relative",
+        minHeight: "100vh",
+        backgroundImage: "url(/img/visonbg.jpg)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        py: 8,
+        px: { xs: 3, md: 6, lg: 10 },
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          inset: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.55)",
+          zIndex: 0,
+        },
+      }}
+    >
+      <Box
+        sx={{
+          position: "relative",
+          zIndex: 1,
+          maxWidth: "1400px",
+          mx: "auto",
+        }}
+      >
+        {/* Title - Top Left */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={titleVariants}
+        >
+          <Typography
+            sx={{
+              fontSize: { xs: "2.5rem", sm: "3rem", md: "3.5rem", lg: "4.5rem" },
+              fontWeight: 600,
+              color: "#FFF",
+              mb: { xs: 4, md: 6 },
+              textAlign: 'left'
+            }}
+          >
+            Sector Served
+          </Typography>
+        </motion.div>
 
-      <Box ref={pinRef} sx={{
-        height: `${totalItems * 100}vh`, position: "relative", background: "#F5F4DE",
-      }}>
-        <Box ref={containerRef} sx={{
-          position: "sticky", top: 0, height: "100vh",
-          background: "#F5F4DE", overflow: "hidden", zIndex: 10,
-        }}>
-
-          {/* Counter */}
-          <Box sx={{
-            position: "absolute", top: { xs: 16, md: 30 }, right: { xs: 16, md: 30 },
-            zIndex: 20, fontFamily: "monospace", fontSize: { xs: 11, md: 14 },
-            color: "#000", background: "rgba(0,0,0,0.05)",
-            padding: { xs: "5px 10px", md: "8px 16px" },
-            borderRadius: 20, backdropFilter: "blur(10px)",
-          }}>
-            {activeIndex === 0 ? "✨" : `${activeIndex} / ${totalItems - 1}`}
-          </Box>
-
-          {/* ─── WEB LAYOUT (UNCHANGED) ─── */}
-          {isDesktop && (
-            <>
-              {/* ── LEFT MENU — vertically centered ── */}
-              <AnimatePresence>
-                {activeIndex > 0 && (
+        {/* Cards Grid using Flexbox - 4 items per row */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          variants={containerVariants}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              margin: { xs: "-8px", sm: "-12px", md: "-16px" },
+            }}
+          >
+            {items.map((item, index) => {
+              // Get the appropriate icon based on item name
+              const IconComponent = processIconMap[item.name] || defaultProcessIcon;
+              
+              // Determine if it's a process or service item
+              const isProcess = item.type === "process";
+              
+              return (
+                <Box
+                  key={index}
+                  sx={{
+                    flex: "0 0 auto",
+                    width: {
+                      xs: "100%",        // 1 item per row on mobile
+                      sm: "50%",          // 2 items per row on tablets
+                      md: "33.333%",      // 3 items per row on medium screens
+                    },
+                    padding: { xs: "8px", sm: "12px", md: "16px" },
+                  }}
+                >
                   <motion.div
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -30 }}
-                    transition={{ duration: 0.4 }}
-                    style={{
-                      position: "absolute",
-                      left: 0,
-                      top: "30%",
-                      transform: "translateY(-50%)",
-                      width: "28%",
-                      zIndex: 10,
-                      padding: "0 12px 0 16px",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      maxHeight: "80vh",
-                      overflowY: "auto",
-                    }}
+                    variants={cardVariants}
+                    whileHover="hover"
+                    style={{ height: "100%" }}
                   >
-                    {services.map((item, idx) => (
+                    <Box
+                      sx={{
+                        backgroundColor: "#FFFFFF80",
+                        backdropFilter: "blur(34px)",
+                        borderRadius: "16px",
+                        padding: { xs: 2.5, md: 3 },
+                        height: "100%",
+                        minHeight: { xs: "200px", md: "220px" },
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
+                        boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
+                        border: "1px solid rgba(0,0,0,0.04)",
+                        transition: "all 0.3s ease",
+                        cursor: "pointer",
+                        "&:hover": {
+                          boxShadow: "0 12px 40px rgba(0,0,0,0.12)",
+                          borderColor: theme.palette.secondary.main,
+                        },
+                      }}
+                    >
+                      {/* Icon - Top Left */}
                       <Box
-                        key={idx}
-                        onClick={() => setActiveIndex(idx + 1)}
-                        sx={{ cursor: "pointer", mb: { xs: 0.8, md: 1.5 } }}
-                      >
-                        <motion.div
-                          animate={activeIndex - 1 === idx
-                            ? { opacity: 1, x: 8, scale: 1.03 }
-                            : { opacity: 0.4, x: 0, scale: 1 }
-                          }
-                          transition={{ duration: 0.3 }}
-                          whileHover={{ opacity: 0.8, x: 4 }}
-                        >
-                          <Typography sx={{
-                            fontSize: { xs: 9, sm: 11, md: 13, lg: 15 },
-                            fontWeight: activeIndex - 1 === idx ? 700 : 400,
-                            color: "#000",
-                            position: "relative",
-                            pl: { xs: "12px", md: "18px" },
-                            lineHeight: 2,
-                            "&::before": activeIndex - 1 === idx ? {
-                              content: '""', position: "absolute",
-                              left: 0, top: "50%", transform: "translateY(-50%)",
-                              width: { xs: 6, md: 10 }, height: 2,
-                              background: "#000", borderRadius: 2,
-                            } : {},
-                          }}>
-                            {item.name}
-                          </Typography>
-                        </motion.div>
-                      </Box>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* ── CENTER IMAGE ── */}
-              <Box sx={{
-                position: "absolute", left: "50%", top: "50%",
-                transform: "translate(-50%, -50%)",
-                width: { xs: "90%", md: "80%" },
-                textAlign: "center",
-              }}>
-                <AnimatePresence mode="wait">
-                  {allSlides.map((item, idx) => (
-                    activeIndex === idx && (
-                      <motion.div
-                        key={idx}
-                        initial="hidden" animate="visible" exit="hidden"
-                        variants={item.isTitle ? titleVariants : imageVariants}
-                        transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-                        style={{ width: "100%" }}
-                      >
-                        {item.isTitle ? (
-                          <AnimatedTitle text={item.title} />
-                        ) : (
-                          <Box>
-                            <Box sx={{
-                              width: "100%",
-                              maxWidth: { xs: "60%", sm: "45%", md: "40%" },
-                              margin: "0 auto",
-                              borderRadius: { xs: 6, md: 12 },
-                              overflow: "hidden",
-                              boxShadow: "0 20px 40px rgba(0,0,0,0.12)",
-                              mb: { xs: 2, md: 3 },
-                            }}>
-                              <Box component="img" src={item.image} alt={item.name}
-                                sx={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                              />
-                            </Box>
-                            <Typography sx={{
-                              fontSize: { xs: 13, sm: 16, md: 20, lg: 24 },
-                              fontWeight: 700, color: "#000",
-                            }}>
-                              {item.name}
-                            </Typography>
-                          </Box>
-                        )}
-                      </motion.div>
-                    )
-                  ))}
-                </AnimatePresence>
-              </Box>
-
-              {/* ── RIGHT DESCRIPTION — desktop ── */}
-              <Box sx={{
-                position: "absolute", right: "3%", top: "50%",
-                transform: "translateY(-50%)", width: "22%",
-                zIndex: 10, display: { xs: "none", md: "block" },
-              }}>
-                <AnimatePresence mode="wait">
-                  {services.map((item, idx) => (
-                    activeIndex - 1 === idx && (
-                      <motion.div key={idx} initial="hidden" animate="visible" exit="hidden"
-                        variants={descriptionVariants} transition={{ duration: 0.4, delay: 0.15 }}
-                      >
-                        <Typography sx={{ fontSize: { md: 15, lg: 17 }, lineHeight: 1.7, color: "#555", textAlign: "right" }}>
-                          {item.description}
-                        </Typography>
-                      </motion.div>
-                    )
-                  ))}
-                </AnimatePresence>
-              </Box>
-            </>
-          )}
-
-          {/* ─── MOBILE/TABLET LAYOUT ─── */}
-          {(isMobile || isTablet) && (
-            <>
-              {/* ── TOP CENTER MENU — Mobile/Tablet ── */}
-              <AnimatePresence>
-                {activeIndex > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -30 }}
-                    transition={{ duration: 0.4 }}
-                    style={{
-                      position: "absolute",
-                      top: "5%",
-                      left: "8%",
-                      transform: "translateX(-50%)",
-                      width: "85%",
-                      maxWidth: "500px",
-                      zIndex: 10,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      padding: "12px 20px",
-                      backdropFilter: "blur(20px)",
-                      borderRadius: "12px",
-                    }}
-                  >
-                    {services.map((item, idx) => (
-                      <Box
-                        key={idx}
-                        onClick={() => setActiveIndex(idx + 1)}
-                        sx={{ 
-                          cursor: "pointer", 
-                          width: "100%",
-                          padding: "4px 0",
+                        sx={{
+                          width: 48,
+                          height: 48,
+                          borderRadius: "12px",
+                          backgroundColor: "#FFF",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "#000",
+                          mb: 2,
+                          flexShrink: 0,
                           transition: "all 0.3s ease",
+                          "&:hover": {
+                            backgroundColor: theme.palette.secondary.main,
+                            color: "#fff",
+                            transform: "scale(1.05)",
+                          },
                         }}
                       >
-                        <motion.div
-                          animate={activeIndex - 1 === idx
-                            ? { opacity: 1, x: 8, scale: 1.03 }
-                            : { opacity: 0.4, x: 0, scale: 1 }
-                          }
-                          transition={{ duration: 0.3 }}
-                          whileHover={{ opacity: 0.8, x: 4 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <Typography sx={{
-                            fontSize: { xs: "2rem", sm: "0.9rem" },
-                            fontWeight: activeIndex - 1 === idx ? 700 : 400,
-                            color: "#000",
-                            position: "relative",
-                            paddingLeft: "16px",
-                            lineHeight: 1.8,
-                            transition: "all 0.3s ease",
-                          }}>
-                            {item.name}
-                          </Typography>
-                        </motion.div>
+                        {React.cloneElement(IconComponent, {
+                          sx: { fontSize: 24 },
+                        })}
                       </Box>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
 
-              {/* ── CENTER CONTENT — Mobile/Tablet ── */}
-              <Box sx={{
-                position: "absolute", left: "50%", top: "73%",
-                transform: "translate(-50%, -50%)",
-                width: "100%",
-                textAlign: "center",
-                px: { xs: 2, sm: 3 },
-              }}>
-                <AnimatePresence mode="wait">
-                  {allSlides.map((item, idx) => (
-                    activeIndex === idx && (
-                      <motion.div
-                        key={idx}
-                        initial="hidden" animate="visible" exit="hidden"
-                        variants={item.isTitle ? mobileTitleVariants : mobileImageVariants}
-                        transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-                        style={{ width: "100%" }}
+                      {/* Step Number for Process Items */}
+                      {isProcess && (
+                        <Typography
+                          sx={{
+                            fontSize: "0.75rem",
+                            fontWeight: 600,
+                            color: theme.palette.secondary.main,
+                            mb: 0.5,
+                            letterSpacing: "0.05em",
+                          }}
+                        >
+                          Step {index + 1}
+                        </Typography>
+                      )}
+
+                      {/* Title */}
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "1rem", sm: "1.1rem", md: "1.5rem" },
+                          fontWeight: 700,
+                          color: "#000",
+                          mb: 1,
+                          lineHeight: 1.3,
+                        }}
                       >
-                        {item.isTitle ? (
-                          <AnimatedTitle text={item.title} />
-                        ) : (
-                          <Box>
-                            <Box sx={{
-                              width: "100%",
-                              maxWidth: { xs: "100%", sm: "50%" },
-                              margin: "0 auto",
-                              borderRadius: { xs: 2, sm: 16 },
+                        {item.name}
+                      </Typography>
+
+                      {/* Description */}
+                      <Typography
+                        sx={{
+                          fontSize: { xs: "0.85rem", sm: "1.2rem" },
+                          color: "#181818",
+                          lineHeight: 1.5,
+                          flex: 1,
+                        }}
+                      >
+                        {item.description}
+                      </Typography>
+
+                      {/* Progress indicator for process steps */}
+                      {isProcess && (
+                        <Box
+                          sx={{
+                            width: "100%",
+                            mt: 2,
+                            pt: 2,
+                            borderTop: "1px solid rgba(0,0,0,0.08)",
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              fontSize: "0.7rem",
+                              color: "#666",
+                              fontWeight: 500,
+                            }}
+                          >
+                            {index + 1} / {items.length}
+                          </Typography>
+                          <Box
+                            sx={{
+                              width: "60%",
+                              height: "3px",
+                              backgroundColor: "#E0E0E0",
+                              borderRadius: "2px",
                               overflow: "hidden",
-                              boxShadow: { 
-                                xs: "0 15px 30px rgba(0,0,0,0.12)",
-                                sm: "0 20px 40px rgba(0,0,0,0.15)"
-                              },
-                              mb: { xs: 2, sm: 3 },
-                            }}>
-                              <Box component="img" src={item.image} alt={item.name}
-                                sx={{ 
-                                  width: "100%", 
-                                  height: "auto", 
-                                  objectFit: "cover", 
-                                  display: "block",
-                                  aspectRatio: "4/3",
-                                }}
-                              />
-                            </Box>
-                            <Typography sx={{
-                              fontSize: { xs: "2rem", sm: "1.5rem" },
-                              fontWeight: 700, color: "#000",
-                              mb: { xs: 1, sm: 2 },
-                            }}>
-                              {item.name}
-                            </Typography>
-                            {/* ── MOBILE DESCRIPTION ── */}
-                            <AnimatePresence mode="wait">
-                              {services.map((service, sIdx) => (
-                                activeIndex - 1 === sIdx && (
-                                  <motion.div
-                                    key={sIdx}
-                                    initial="hidden" animate="visible" exit="hidden"
-                                    variants={mobileDescriptionVariants}
-                                    transition={{ duration: 0.3, delay: 0.1 }}
-                                  >
-                                    <Typography sx={{
-                                      fontSize: { xs: "1.6rem", sm: "0.9rem" },
-                                      color: "#555",
-                                      lineHeight: 1.5,
-                                      maxWidth: "85%",
-                                      mx: "auto",
-                                      px: 2,
-                                    }}>
-                                      {service.description}
-                                    </Typography>
-                                  </motion.div>
-                                )
-                              ))}
-                            </AnimatePresence>
+                              alignSelf: "center",
+                            }}
+                          >
+                            <Box
+                              sx={{
+                                width: `${((index + 1) / items.length) * 100}%`,
+                                height: "100%",
+                                backgroundColor: theme.palette.secondary.main,
+                                borderRadius: "2px",
+                                transition: "width 0.5s ease",
+                              }}
+                            />
                           </Box>
-                        )}
-                      </motion.div>
-                    )
-                  ))}
-                </AnimatePresence>
-              </Box>
-            </>
-          )}
+                        </Box>
+                      )}
+                    </Box>
+                  </motion.div>
+                </Box>
+              );
+            })}
+          </Box>
+        </motion.div>
+
+        {/* Get Quote Button - Bottom Center with Arrow */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            mt: { xs: 6, md: 8, lg: 10 },
+          }}
+        >
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+          >
+            <Button
+              variant="contained"
+              size="large"
+              onClick={scrollToQuote}
+              endIcon={<ArrowForward sx={{ fontSize: 24 }} />}
+              sx={{
+                backgroundColor: theme.palette.secondary.main,
+                color: "white",
+                padding: { xs: "12px 32px", sm: "14px 40px", md: "14px 48px" },
+                borderRadius: "50px",
+                fontSize: { xs: "0.95rem", sm: "1rem", md: "1.8rem" },
+                fontWeight: 600,
+                textTransform: "none",
+                boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
+                transition: "all 0.3s ease",
+                gap: 1,
+                "&:hover": {
+                  transform: "translateY(-3px)",
+                  boxShadow: "0 12px 35px rgba(0,0,0,0.25)",
+                  backgroundColor: theme.palette.secondary.dark,
+                  "& .MuiButton-endIcon": {
+                    transform: "translateX(4px) rotate(-45deg)",
+                  },
+                },
+                "& .MuiButton-endIcon": {
+                  transition: "transform 0.3s ease",
+                },
+              }}
+            >
+              Get Quote
+            </Button>
+          </motion.div>
         </Box>
       </Box>
     </Box>

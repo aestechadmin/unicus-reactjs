@@ -1,9 +1,10 @@
 import React, { useRef } from "react";
-import { Box, Typography, Container } from "@mui/material";
+import { Box, Typography, Container, Button, useTheme } from "@mui/material";
 import { motion, useScroll, useTransform } from "framer-motion";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { websiteData } from "../Unicus";
+import NorthEastIcon from "@mui/icons-material/NorthEast";
 
 const AnimatedMainTitle = ({ title }) => {
   const titleRef = useRef(null);
@@ -66,6 +67,7 @@ const AnimatedText = ({ text, delay = 0 }) => {
 };
 
 const ScrollImageReveal = ({ slide }) => {
+  const theme = useTheme();
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
   const clipPath = useTransform(scrollYProgress, [0, 0.5, 1], ["inset(0% 50% 0% 50%)", "inset(0% 0% 0% 0%)", "inset(0% 50% 0% 50%)"]);
@@ -89,7 +91,7 @@ const ScrollImageReveal = ({ slide }) => {
         my: { xs: 0, md: 2 },
         px: { xs: 3, md: 8 },
         py: { xs: 6, md: 0 },
-        backgroundColor: "#F5F4DE",
+        backgroundColor: "#E6F1FE",
         gap: { xs: 4, md: 0 },
       }}
     >
@@ -101,11 +103,11 @@ const ScrollImageReveal = ({ slide }) => {
           borderRadius: "24px",
           overflow: "hidden",
           boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
-          aspectRatio: "3/4",
+          // aspectRatio: "3/4",
           width: "100%",
           maxWidth: { xs: "280px", sm: "320px", md: "100%" },
         }}>
-          <motion.div style={{ scale: imageScale, opacity: imageOpacity, width: "100%", height: "100%" }}>
+          <motion.div style={{ scale: 0.8, opacity: imageOpacity, width: "100%", height: "100%" }}>
             <Box
               component="img"
               src={slide.image}
@@ -130,6 +132,39 @@ const ScrollImageReveal = ({ slide }) => {
       <Box sx={{ flex: { xs: "none", md: 1 }, width: { xs: "100%", md: "auto" }, pl: { xs: 0, md: 3 } }}>
         <motion.div style={{ opacity: textOpacity, x: textX }}>
           <AnimatedText text={slide.description} delay={0.3} />
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            sx={{ display: "flex", justifyContent: { xs: "center", md: "left" } }}
+          >
+            <Button
+              onClick={() => document.getElementById("quote-section")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+              endIcon={<NorthEastIcon fontSize="small" />}
+              sx={{
+                mt: 4,
+                px: 2,
+                py: 1,
+                color: "#FFF",
+                fontSize: "1.5rem",
+                fontWeight: 700,
+                textTransform: "none",
+                background: theme.palette.secondary.main,
+                boxShadow: "none",
+                "& .MuiButton-endIcon": {
+                  ml: 0,
+                  mr: 0,
+                },
+                "&:hover": {
+                  background: theme.palette.primary.main,
+                },
+              }}
+            >
+              Contact Us
+            </Button>
+          </motion.div>
         </motion.div>
       </Box>
     </Box>
@@ -168,7 +203,7 @@ const DescriptionOnlySlide = ({ slide }) => {
         px: { xs: 3, md: 8 },
         py: { xs: 4, md: 0 },
         overflow: "hidden",
-        backgroundColor: "#F5F4DE",
+        backgroundColor: "#E6F1FE",
       }}
     >
       <motion.div style={{ opacity: textOpacity, scale: textScale, position: "relative", zIndex: 2, width: "100%", maxWidth: 1300, textAlign: "center" }}>
@@ -205,9 +240,9 @@ const SequentialScrollReveal = ({ slides }) => {
 
 export default function Experience({ expSectionRef, endTitleRef, endButtonRef }) {
   return (
-    <Box ref={expSectionRef} component="section" sx={{ backgroundColor: "#F5F4DE", position: "relative" }}>
+    <Box ref={expSectionRef} component="section" sx={{ backgroundColor: "#E6F1FE", position: "relative" }}>
       <Container maxWidth="xl" sx={{ p: 0 }}>
-        <Box sx={{ textAlign: "center", mb: { xs: 4, md: 8 }, overflow: "hidden", width: "100%", pt: { xs: 4, md: 2 } }}>
+        <Box sx={{ textAlign: "center", mb: { xs: 4, md: 8 }, overflow: "hidden", width: "100%", pt: { xs: 6, md: 8 } }}>
           <AnimatedMainTitle title={websiteData.titleData.mainTitle} />
         </Box>
         <SequentialScrollReveal slides={websiteData.experienceSlides} />
