@@ -314,7 +314,6 @@ export default function Hero({ heroContainerRef }) {
   const heroOpacity   = useTransform(scrollMV, [PIN_HEIGHT * 0.85, PIN_HEIGHT], [1, 0]);
   const progressScale = useTransform(scrollMV, [0, PIN_HEIGHT], [0, 1]);
   const indicatorOpa  = useTransform(scrollMV, [0, PIN_HEIGHT * 0.6],  [1, 0]);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
   // Video ready
   useEffect(() => {
@@ -326,7 +325,6 @@ export default function Hero({ heroContainerRef }) {
       video.currentTime = 0;
       video.pause();
       setIsVideoReady(true);
-      setIsVideoLoaded(true);
     };
 
     const handleError = () => {
@@ -418,52 +416,30 @@ export default function Hero({ heroContainerRef }) {
       >
         {/* Video or Fallback */}
         {!showFallback ? (
-          <>
-            {/* POSTER IMAGE - Shows immediately */}
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                backgroundImage: `url(${websiteData.hero.poster || '/img/hero-poster.jpg'})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                opacity: isVideoLoaded ? 0 : 1,
-                transition: "opacity 0.8s ease-in-out",
-                transform: "scale(1.05)",
-                zIndex: 0,
-              }}
-            />
-            
-            {/* VIDEO - Fades in after loading */}
-            <video
-              ref={videoRef}
-              muted
-              playsInline
-              preload="metadata"
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                transform: "scale(1.05)",
-                backgroundColor: "transparent",
-                opacity: isVideoLoaded ? 1 : 0,
-                transition: "opacity 0.8s ease-in-out",
-                zIndex: 1,
-              }}
-            >
-              {isMobile ? (
-                <source src={websiteData.hero.videoMobile || websiteData.hero.video} type="video/mp4" />
-              ) : (
-                <source src={websiteData.hero.video} type="video/mp4" />
-              )}
-            </video>
-          </>
+          <video
+            ref={videoRef}
+            muted
+            playsInline
+            preload="metadata"
+            poster={websiteData.hero.poster}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              transform: "scale(1.05)",
+              backgroundColor: "transparent",
+            }}
+          >
+            {/* Use lower resolution on mobile */}
+            {isMobile ? (
+              <source src={websiteData.hero.videoMobile || websiteData.hero.video} type="video/mp4" />
+            ) : (
+              <source src={websiteData.hero.video} type="video/mp4" />
+            )}
+          </video>
         ) : (
           <div
             style={{
