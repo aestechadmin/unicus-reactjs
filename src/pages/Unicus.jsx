@@ -41,7 +41,7 @@ export const websiteData = {
   // ffmpeg -i output.mp4 -vframes 1 -q:v 2 hero-poster.jpg
   hero: {
     video: "/img/output4.mp4",
-    videoMobile: "/img/output4.mp4",
+    videoMobile: "/img/mobile-output.mp4",
     videoWebm: "/img/hero.webm",
     poster: "/img/hero-poster.jpg", 
     title: "Clean Spaces",
