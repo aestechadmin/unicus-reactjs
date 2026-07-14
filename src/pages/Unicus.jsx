@@ -36,10 +36,13 @@ const sectionIds = [
 // Website Data
 export const websiteData = {
   // ffmpeg -i your-video.mp4 -c:v libx264 -g 1 -keyint_min 1 -crf 18 -preset ultrafast output.mp4
+  // ffmpeg -i your-video.mp4 -c:v libx264 -g 1 -keyint_min 1 -crf 23 -preset fast -vf "scale=720:1280" -movflags +faststart mobile-output.mp4 && \
   // ffmpeg -i output.mp4 -vframes 1 -q:v 2 hero-poster.jpg
   hero: {
     video: "/img/output.mp4",
     videoMobile: "/img/hero-mobile.mp4",
+    videoWebm: "/img/hero.webm",
+    poster: "/img/hero-poster.jpg", 
     title: "Clean Spaces",
     subtitle: "Smarter Facility Management",
   },

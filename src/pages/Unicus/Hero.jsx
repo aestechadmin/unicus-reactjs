@@ -305,7 +305,7 @@ export default function Hero({ heroContainerRef }) {
   }, []);
 
   // Reduce PIN_HEIGHT on mobile for less scrolling
-  const PIN_HEIGHT = isMobile ? 1200 : 1800;
+  const PIN_HEIGHT = isMobile ? 800 : 1500;
 
   const scrollMV = useMotionValue(0);
 
@@ -314,6 +314,7 @@ export default function Hero({ heroContainerRef }) {
   const heroOpacity   = useTransform(scrollMV, [PIN_HEIGHT * 0.85, PIN_HEIGHT], [1, 0]);
   const progressScale = useTransform(scrollMV, [0, PIN_HEIGHT], [0, 1]);
   const indicatorOpa  = useTransform(scrollMV, [0, PIN_HEIGHT * 0.6],  [1, 0]);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
   // Video ready
   useEffect(() => {
@@ -325,6 +326,7 @@ export default function Hero({ heroContainerRef }) {
       video.currentTime = 0;
       video.pause();
       setIsVideoReady(true);
+      setIsVideoLoaded(true);
     };
 
     const handleError = () => {
@@ -420,8 +422,8 @@ export default function Hero({ heroContainerRef }) {
             ref={videoRef}
             muted
             playsInline
-            preload="auto"
-            poster="/img/hero-poster.jpg"
+            preload="metadata"
+            poster={websiteData.hero.poster}
             style={{
               position: "absolute",
               top: 0,
@@ -430,6 +432,9 @@ export default function Hero({ heroContainerRef }) {
               height: "100%",
               objectFit: "cover",
               transform: "scale(1.05)",
+              backgroundColor: "transparent",
+              opacity: isVideoLoaded ? 1 : 0,
+              transition: "opacity 0.5s ease",
             }}
           >
             {/* Use lower resolution on mobile */}
