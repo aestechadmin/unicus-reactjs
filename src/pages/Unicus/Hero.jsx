@@ -420,7 +420,7 @@ export default function Hero({ heroContainerRef }) {
             ref={videoRef}
             muted
             playsInline
-            preload="metadata"
+            preload="auto"
             poster={websiteData.hero.poster}
             style={{
               position: "absolute",
