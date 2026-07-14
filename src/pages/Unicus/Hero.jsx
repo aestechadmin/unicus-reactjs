@@ -292,8 +292,20 @@ export default function Hero({ heroContainerRef }) {
   const [isDone, setIsDone] = useState(false);
   const [videoDuration, setVideoDuration] = useState(0);
   const [showFallback, setShowFallback] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const PIN_HEIGHT = 1800;
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Reduce PIN_HEIGHT on mobile for less scrolling
+  const PIN_HEIGHT = isMobile ? 1200 : 1800;
 
   const scrollMV = useMotionValue(0);
 
@@ -333,24 +345,25 @@ export default function Hero({ heroContainerRef }) {
     }
   }, []);
 
-  // Optimized scroll handler
+  // Optimized scroll handler with mobile adjustments
   useEffect(() => {
     const video = videoRef.current;
     let rafId = null;
     let lastTime = 0;
+    let frameSkip = isMobile ? 0.05 : 0.03; // More aggressive skip on mobile
 
     const updateVideo = () => {
       const scrollY = window.scrollY || window.pageYOffset;
       const clamped = Math.min(Math.max(scrollY, 0), PIN_HEIGHT);
       scrollMV.set(clamped);
 
-      // Update video with frame skipping
+      // Update video with frame skipping - more aggressive on mobile
       if (video && isVideoReady && !showFallback && videoDuration > 0) {
         const progress = clamped / PIN_HEIGHT;
         const targetTime = Math.min(progress * videoDuration, videoDuration - 0.01);
         
-        // Only update if difference is significant
-        if (Math.abs(targetTime - lastTime) > 0.03) {
+        // Only update if difference is significant (higher threshold on mobile)
+        if (Math.abs(targetTime - lastTime) > frameSkip) {
           video.currentTime = targetTime;
           lastTime = targetTime;
         }
@@ -371,7 +384,7 @@ export default function Hero({ heroContainerRef }) {
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [isVideoReady, videoDuration, showFallback, scrollMV, PIN_HEIGHT]);
+  }, [isVideoReady, videoDuration, showFallback, isMobile, scrollMV, PIN_HEIGHT]);
 
   return (
     <>
@@ -408,6 +421,7 @@ export default function Hero({ heroContainerRef }) {
             muted
             playsInline
             preload="auto"
+            poster="/img/hero-poster.jpg"
             style={{
               position: "absolute",
               top: 0,
@@ -418,7 +432,12 @@ export default function Hero({ heroContainerRef }) {
               transform: "scale(1.05)",
             }}
           >
-            <source src={websiteData.hero.video} type="video/mp4" />
+            {/* Use lower resolution on mobile */}
+            {isMobile ? (
+              <source src={websiteData.hero.videoMobile || websiteData.hero.video} type="video/mp4" />
+            ) : (
+              <source src={websiteData.hero.video} type="video/mp4" />
+            )}
           </video>
         ) : (
           <div
@@ -451,7 +470,7 @@ export default function Hero({ heroContainerRef }) {
         <motion.div
           style={{
             position: "absolute",
-            bottom: "10%",
+            bottom: isMobile ? "15%" : "10%",
             left: 0,
             right: 0,
             display: "flex",
@@ -470,8 +489,8 @@ export default function Hero({ heroContainerRef }) {
               color: "#fff",
               fontWeight: 700,
               lineHeight: 1.2,
-              mb: 2,
-              fontSize: { xs: "2.5rem", sm: "4rem", md: "5.5rem", lg: "7rem" },
+              mb: isMobile ? 1 : 2,
+              fontSize: { xs: "2rem", sm: "2.5rem", md: "5.5rem", lg: "7rem" },
               textTransform: "uppercase",
               letterSpacing: "0.02em",
               textShadow: "0 4px 30px rgba(0,0,0,0.5)",
@@ -490,10 +509,10 @@ export default function Hero({ heroContainerRef }) {
               variant="h5"
               sx={{
                 color: "#fff",
-                mt: 2,
+                mt: isMobile ? 0.5 : 2,
                 maxWidth: 700,
                 lineHeight: 1.5,
-                fontSize: { xs: "1rem", sm: "1.3rem", md: "1.8rem" },
+                fontSize: { xs: "0.8rem", sm: "1rem", md: "1.8rem" },
                 fontWeight: 400,
                 letterSpacing: "0.05em",
                 textShadow: "0 2px 20px rgba(0,0,0,0.4)",
@@ -503,71 +522,75 @@ export default function Hero({ heroContainerRef }) {
             </Typography>
           </motion.div>
 
-          {/* Progress bar */}
-          <div
-            style={{
-              marginTop: "32px",
-              width: "200px",
-              height: "2px",
-              background: "rgba(255,255,255,0.15)",
-              borderRadius: "9999px",
-              overflow: "hidden",
-            }}
-          >
-            <motion.div
-              style={{
-                height: "100%",
-                background: "rgba(255,255,255,0.8)",
-                scaleX: progressScale,
-                transformOrigin: "left",
-              }}
-            />
-          </div>
-
-          {/* Scroll indicator */}
-          <motion.div
-            style={{ marginTop: "20px", opacity: indicatorOpa }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
-          >
+          {/* Progress bar - hidden on mobile */}
+          {!isMobile && (
             <div
               style={{
-                width: "24px",
-                height: "40px",
-                border: "2px solid rgba(255,255,255,0.3)",
-                borderRadius: "12px",
-                display: "flex",
-                justifyContent: "center",
-                paddingTop: "6px",
-                margin: "0 auto",
+                marginTop: "32px",
+                width: "200px",
+                height: "2px",
+                background: "rgba(255,255,255,0.15)",
+                borderRadius: "9999px",
+                overflow: "hidden",
               }}
             >
               <motion.div
-                animate={{ y: [0, 12, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                 style={{
-                  width: "3px",
-                  height: "12px",
-                  background: "rgba(255,255,255,0.6)",
-                  borderRadius: "2px",
+                  height: "100%",
+                  background: "rgba(255,255,255,0.8)",
+                  scaleX: progressScale,
+                  transformOrigin: "left",
                 }}
               />
             </div>
+          )}
 
-            <motion.p
-              style={{
-                marginTop: "12px",
-                color: "rgba(255,255,255,0.3)",
-                fontSize: "10px",
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-                textAlign: "center",
-              }}
+          {/* Scroll indicator - hidden on mobile */}
+          {!isMobile && (
+            <motion.div
+              style={{ marginTop: "20px", opacity: indicatorOpa }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.2 }}
             >
-              Scroll to explore
-            </motion.p>
-          </motion.div>
+              <div
+                style={{
+                  width: "24px",
+                  height: "40px",
+                  border: "2px solid rgba(255,255,255,0.3)",
+                  borderRadius: "12px",
+                  display: "flex",
+                  justifyContent: "center",
+                  paddingTop: "6px",
+                  margin: "0 auto",
+                }}
+              >
+                <motion.div
+                  animate={{ y: [0, 12, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  style={{
+                    width: "3px",
+                    height: "12px",
+                    background: "rgba(255,255,255,0.6)",
+                    borderRadius: "2px",
+                  }}
+                />
+              </div>
+
+              <motion.p
+                style={{
+                  marginTop: "12px",
+                  color: "rgba(255,255,255,0.3)",
+                  fontSize: "10px",
+                  letterSpacing: "0.2em",
+                  textTransform: "uppercase",
+                  textAlign: "center",
+                }}
+              >
+                Scroll to explore
+              </motion.p>
+            </motion.div>
+          )}
         </motion.div>
       </motion.div>
     </>

@@ -36,8 +36,10 @@ const sectionIds = [
 // Website Data
 export const websiteData = {
   // ffmpeg -i your-video.mp4 -c:v libx264 -g 1 -keyint_min 1 -crf 18 -preset ultrafast output.mp4
+  // ffmpeg -i output.mp4 -vframes 1 -q:v 2 hero-poster.jpg
   hero: {
     video: "/img/output.mp4",
+    videoMobile: "/img/hero-mobile.mp4",
     title: "Clean Spaces",
     subtitle: "Smarter Facility Management",
   },
@@ -173,8 +175,8 @@ export default function Unicus() {
 
   const sections = [
   { id: "hero", name: "Home" },
-  { id: "about-us", name: "Vision & Company" },
-  { id: "experience", name: "Why Unicus Facilities?" },
+  { id: "about-us", name: "Vision" },
+  { id: "experience", name: "Why UNICUS Facilities?" },
   { id: "sectors-section", name: "Service" },
   { id: "process-section", name: "Sector" },
   { id: "growth-section", name: "Clients" },
