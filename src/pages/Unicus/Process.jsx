@@ -1,26 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { Box, Typography, Button, useTheme } from "@mui/material";
 import { motion } from "framer-motion";
 import { websiteData } from "../Unicus";
 import {
-  LocalHospital,
-  Home,
-  Business,
-  School,
-  Factory,
-  CorporateFare,
-  CleaningServices,
-  Security,
-  PestControl,
-  ElectricalServices,
-  Plumbing,
-  Grass,
   ArrowForward,
   // Process-specific icons
   Assignment,
   Handshake,
   Settings,
-  CheckCircle,
   Description,
   People,
   Build,
@@ -34,7 +21,6 @@ import {
   Star,
   Rocket,
   Shield,
-  Headset,
   ThumbUp,
 } from "@mui/icons-material";
 

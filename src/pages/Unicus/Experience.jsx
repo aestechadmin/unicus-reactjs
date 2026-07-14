@@ -71,7 +71,7 @@ const ScrollImageReveal = ({ slide }) => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
   const clipPath = useTransform(scrollYProgress, [0, 0.5, 1], ["inset(0% 50% 0% 50%)", "inset(0% 0% 0% 0%)", "inset(0% 50% 0% 50%)"]);
-  const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.2, 1, 1.2]);
+  // const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.2, 1, 1.2]);
   const imageOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
   const textX = useTransform(scrollYProgress, [0, 0.4, 1], [30, 0, -30]);

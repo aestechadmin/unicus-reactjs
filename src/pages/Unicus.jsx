@@ -8,11 +8,11 @@ import Observer from "gsap/Observer";
 
 import Hero from "./Unicus/Hero";
 import Experience from "./Unicus/Experience";
-import ComingSoon from "./Unicus/ComingSoon";
+// import ComingSoon from "./Unicus/ComingSoon";
 import Growth from "./Unicus/Growth";
-import Technology from "./Unicus/Technology";
+// import Technology from "./Unicus/Technology";
 import Quote from "./Unicus/Quote";
-import FAQ from "./Unicus/FAQ";
+// import FAQ from "./Unicus/FAQ";
 import Footer from "./Unicus/Footer";
 import Header from "./Unicus/Header";
 import Sectors from "./Unicus/Sectors";

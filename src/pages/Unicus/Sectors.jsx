@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { Box, Typography, Button, useTheme } from "@mui/material";
 import { motion } from "framer-motion";
 import { websiteData } from "../Unicus";
@@ -108,14 +108,6 @@ export default function Sectors() {
     tap: {
       scale: 0.95,
     },
-  };
-
-  // Scroll to Quote section
-  const scrollToQuote = () => {
-    const quoteSection = document.getElementById("quote-section");
-    if (quoteSection) {
-      quoteSection.scrollIntoView({ behavior: "smooth" });
-    }
   };
 
   return (
