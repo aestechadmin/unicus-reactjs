@@ -35,8 +35,9 @@ const sectionIds = [
 
 // Website Data
 export const websiteData = {
+  // ffmpeg -i your-video.mp4 -c:v libx264 -g 1 -keyint_min 1 -crf 18 -preset ultrafast output.mp4
   hero: {
-    video: "/img/initialVideo.mp4",
+    video: "/img/output.mp4",
     title: "Clean Spaces",
     subtitle: "Smarter Facility Management",
   },
@@ -208,7 +209,7 @@ export default function Unicus() {
     if (typeof window === "undefined") return;
 
     const lenis = new Lenis({
-      duration: 4,
+      duration: 2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       smoothTouch: true,
