@@ -292,12 +292,21 @@ export default function Hero({ heroContainerRef }) {
   const [isDone, setIsDone] = useState(false);
   const [videoDuration, setVideoDuration] = useState(0);
   const [showFallback, setShowFallback] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  
+  // ✅ FIX: Check mobile on initial render
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+    return false;
+  });
 
-  // Check if mobile
+  // Check mobile on resize
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      const isMobileWidth = window.innerWidth < 768;
+      const isMobileUA = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      setIsMobile(isMobileWidth || isMobileUA);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -350,26 +359,23 @@ export default function Hero({ heroContainerRef }) {
     const video = videoRef.current;
     let rafId = null;
     let lastTime = 0;
-    let frameSkip = isMobile ? 0.05 : 0.03; // More aggressive skip on mobile
+    let frameSkip = isMobile ? 0.05 : 0.03;
 
     const updateVideo = () => {
       const scrollY = window.scrollY || window.pageYOffset;
       const clamped = Math.min(Math.max(scrollY, 0), PIN_HEIGHT);
       scrollMV.set(clamped);
 
-      // Update video with frame skipping - more aggressive on mobile
       if (video && isVideoReady && !showFallback && videoDuration > 0) {
         const progress = clamped / PIN_HEIGHT;
         const targetTime = Math.min(progress * videoDuration, videoDuration - 0.01);
         
-        // Only update if difference is significant (higher threshold on mobile)
         if (Math.abs(targetTime - lastTime) > frameSkip) {
           video.currentTime = targetTime;
           lastTime = targetTime;
         }
       }
 
-      // Update done state
       if (scrollY >= PIN_HEIGHT + 100) {
         setIsDone(true);
       } else {
@@ -433,12 +439,11 @@ export default function Hero({ heroContainerRef }) {
               backgroundColor: "transparent",
             }}
           >
-            {/* Use lower resolution on mobile */}
-            {isMobile ? (
-              <source src={websiteData.hero.videoMobile || websiteData.hero.video} type="video/mp4" />
-            ) : (
-              <source src={websiteData.hero.video} type="video/mp4" />
-            )}
+            {/* ✅ Use correct video based on isMobile */}
+            <source 
+              src={isMobile ? websiteData.hero.videoMobile || websiteData.hero.video : websiteData.hero.video} 
+              type="video/mp4" 
+            />
           </video>
         ) : (
           <div
