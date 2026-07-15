@@ -4,6 +4,17 @@ import { motion } from "framer-motion";
 
 const Loader = ({ onComplete }) => {
   const [isVisible, setIsVisible] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const hasVisited = sessionStorage.getItem("hasVisited");
@@ -18,7 +29,7 @@ const Loader = ({ onComplete }) => {
       setIsVisible(false);
       sessionStorage.setItem("hasVisited", "true");
       if (onComplete) onComplete();
-    }, 2500); // Increased to 3 seconds for full animation
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [onComplete]);
@@ -56,8 +67,9 @@ const Loader = ({ onComplete }) => {
           scale: 1,
           opacity: 1,
           rotate: 0,
-          x: [0, -50, -100],
-          y: ["0%", "-400%"], // Changed from -50% to -100% - goes all the way to top
+          // No x movement on mobile, only on desktop
+          x: isMobile ? 0 : ["0%", "-20%"],
+          y: ["0%", "-500%"],
         }}
         transition={{
           scale: {
@@ -73,29 +85,33 @@ const Loader = ({ onComplete }) => {
           },
           x: {
             duration: 1.5,
-            delay: 1, // 👈 y start aagura time la x-um start aagum
             ease: "easeInOut",
+            delay: 1,
           },
           y: {
             duration: 1.5,
             ease: "easeInOut",
-            delay: 1, // Wait 1 second then move up
+            delay: 1,
           },
         }}
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: "10px",
+          gap: isMobile ? "8px" : "10px",
+          width: "100%",
+          maxWidth: isMobile ? "220px" : "300px",
+          padding: isMobile ? "0 10px" : "0 20px",
         }}
       >
         <motion.img
           src="/img/Brands.png"
           alt="Logo"
           style={{
-            width: "80px",
-            height: "80px",
+            width: isMobile ? "50px" : "80px",
+            height: isMobile ? "50px" : "80px",
             objectFit: "contain",
+            flexShrink: 0,
           }}
           animate={{
             scale: [1, 1.1, 1],
@@ -120,14 +136,15 @@ const Loader = ({ onComplete }) => {
         />
         
         <motion.span
-          initial={{ opacity: 0, x: -20 }}
+          initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5, duration: 0.6 }}
           style={{
-            fontSize: "45px",
+            fontSize: isMobile ? "22px" : "clamp(28px, 5vw, 45px)",
             fontWeight: 700,
             color: "#fff",
             display: "inline-block",
+            whiteSpace: "nowrap",
           }}
         >
           Unicus
