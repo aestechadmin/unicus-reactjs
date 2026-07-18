@@ -6,10 +6,10 @@ import Loader from "../components/Loader";
 const MainLayout = () => {
 
   const location = useLocation();
-  const [showLoader, setShowLoader] = useState(true);
-  const handleLoaderComplete = () => {
-    setShowLoader(false);
-  };
+  // const [showLoader, setShowLoader] = useState(true);
+  // const handleLoaderComplete = () => {
+  //   setShowLoader(false);
+  // };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -23,7 +23,7 @@ const MainLayout = () => {
 
   return (
     <>
-      {showLoader && <Loader onComplete={handleLoaderComplete} />}
+      {/* {showLoader && <Loader onComplete={handleLoaderComplete} />} */}
       <NetworkStatus />
 
       {/* PAGE CONTENT */}
