@@ -1,6 +1,6 @@
 // Experience.jsx
 import React, { useRef } from 'react';
-import { Box, Typography, Container, Button, useTheme, Grid } from "@mui/material";
+import { Box, Typography, Container, Button, useTheme } from "@mui/material";
 import { websiteData } from "../Unicus";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import { scrollToQuote } from "../NewUnicus"; 
