@@ -147,15 +147,27 @@ export default function Process() {
         position: "relative",
         minHeight: "100vh",
         backgroundImage: "url(/img/visonbg.jpg)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundSize: { 
+          xs: "cover",     // Cover on mobile
+          sm: "cover",     // Cover on tablet
+          md: "130%",      // Zoom on desktop
+          lg: "130%" 
+        },
+        backgroundPosition: { 
+          xs: "center",    // Center on mobile
+          sm: "center", 
+          md: "top", 
+          lg: "top" 
+        },
+        backgroundPosition: "top",
         py: 8,
         px: { xs: 3, md: 6, lg: 10 },
         "&::before": {
           content: '""',
           position: "absolute",
           inset: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.55)",
+          // backgroundColor: "rgba(0, 0, 0, 0.7)",
+          background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 100%)',
           zIndex: 0,
         },
       }}
@@ -412,7 +424,7 @@ export default function Process() {
                 },
               }}
             >
-              Get Quote
+              Request a Site Assessment
             </Button>
           </motion.div>
         </Box>

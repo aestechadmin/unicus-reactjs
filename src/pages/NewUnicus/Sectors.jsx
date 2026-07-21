@@ -126,7 +126,8 @@ export default function Sectors() {
           content: '""',
           position: "absolute",
           inset: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.55)",
+          background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 100%)',
+          // backgroundColor: "rgba(0, 0, 0, 0.55)",
           zIndex: 0,
         },
       }}

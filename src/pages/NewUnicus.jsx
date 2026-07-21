@@ -24,11 +24,11 @@ const sectionIds = [
    "hero",
   "vision",
   "company",
-  "experience",
-  "sectors-section",
-  "process-section",
-  "growth-section",
+  // "experience",
   "clients-section",
+  "process-section",
+  "sectors-section",
+  "growth-section",
   "quote-section",
 ];
 
@@ -36,8 +36,8 @@ const sectionIds = [
 export const websiteData = {
     hero: {
     backgroundImage: "/img/sectorbg.jpg", // Changed from video to image
-    title: "Clean Spaces",
-    subtitle: "Smarter Facility Management",
+    title: "Clean Spaces.",
+    subtitle: "Sharper Watch.",
   },
   titleData: {
     mainTitle: "Why Unicus Facilities",
@@ -204,12 +204,12 @@ export default function NewUnicus() {
   const sections = [
   { id: "hero", name: "Home" },
   { id: "vision", name: "Vision" },
-  { id: "company", name: "Company" },
-  { id: "experience", name: "Why UNICUS Facilities?" },
-  { id: "sectors-section", name: "Service" },
-  { id: "process-section", name: "Sector" },
-  { id: "growth-section", name: "Clients" },
+  { id: "company", name: "Company Overview" },
+  // { id: "experience", name: "Why UNICUS Facilities?" },
   { id: "clients-section", name: "How We Work" },
+  { id: "process-section", name: "Sector" },
+  { id: "sectors-section", name: "Service" },
+  { id: "growth-section", name: "Clients" },
   { id: 'faq-section', name: 'FAQ' },
 ];
 
@@ -316,22 +316,27 @@ export default function NewUnicus() {
         <Company />
       </div>
       
-      <div id="experience">
+      {/* <div id="experience">
         <Experience 
           expSectionRef={expSectionRef} 
           endTitleRef={endTitleRef} 
           endButtonRef={endButtonRef}
         />
-      </div>
+      </div> */}
 
-
-      <div id="sectors-section">
-        <Sectors />
+      <div id="clients-section">
+        <Clients clientsData={websiteData.clients}/>
       </div>
 
       <div id="process-section">
         <Process />
       </div>
+
+      <div id="sectors-section">
+        <Sectors />
+      </div>
+
+
             
       <div id="growth-section">
         <Growth />
@@ -339,9 +344,7 @@ export default function NewUnicus() {
       
 
 
-      <div id="clients-section">
-        <Clients clientsData={websiteData.clients}/>
-      </div>
+
       
       <div id="quote-section">
         <Quote />

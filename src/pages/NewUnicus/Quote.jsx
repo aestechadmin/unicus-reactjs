@@ -460,11 +460,11 @@ const Quote = () => {
                     mt: { xs: 0.5, md: 1 },
                     width: { xs: '100%', sm: '100%' },
                     backgroundColor: '#fff',
-                    color: '#000',
+                    color: '#027EFF',
                     px: { xs: 3, md: 5 },
                     py: { xs: 1.2, md: 1.8 },
-                    fontWeight: 700,
-                    fontSize: { xs: 13, md: 15 },
+                    fontWeight: 600,
+                    fontSize: { xs: 13, md: 18 },
                     textTransform: 'none',
                     borderRadius: 2,
                     transition: 'all 0.3s',
@@ -480,7 +480,7 @@ const Quote = () => {
                     },
                   }}
                 >
-                  Request a site assessment
+                  Request a Site Assessment
                 </Button>
               </motion.div>
             </Box>

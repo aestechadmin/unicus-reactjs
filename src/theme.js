@@ -16,20 +16,20 @@ const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: "'Figtree', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     textAlign: 'left',
     fontWeightRegular: 400,
     fontWeightMedium: 500,
     fontWeightBold: 600, // SemiBold
     h1: {
-      fontFamily: "'Figtree', sans-serif",
+      fontFamily: "'Inter', sans-serif",
       fontWeight: 600,
       fontSize: '1rem',
       lineHeight: '19px',
       letterSpacing: '0%',
     },
     body1: {
-      fontFamily: "'Figtree', sans-serif",
+      fontFamily: "'Inter', sans-serif",
       fontWeight: 600,
       fontSize: '1rem',
       lineHeight: 1.5,
@@ -37,7 +37,7 @@ const theme = createTheme({
       textAlign: 'center',
     },
     button: {
-      fontFamily: "'Figtree', sans-serif",
+      fontFamily: "'Inter', sans-serif",
       fontWeight: 600,
       fontSize: '1rem',
       lineHeight: 1.5,
