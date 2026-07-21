@@ -39,7 +39,8 @@ const Footer = () => {
   
   const companyLinks = [
     { label: 'Vision', href: 'about-us' },
-    { label: 'Why Unicus', href: 'experience' },
+    // { label: 'Why Unicus', href: 'experience' },
+    { label: 'How to Work', href: 'clients-section' },
     { label: 'Process', href: 'process-section' },
     // { label: 'FAQ', href: 'faq-section' },
     { label: 'Get Quote', href: 'quote-section' },
