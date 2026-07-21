@@ -159,7 +159,6 @@ export default function Process() {
           md: "top", 
           lg: "top" 
         },
-        backgroundPosition: "top",
         py: 8,
         px: { xs: 3, md: 6, lg: 10 },
         "&::before": {
