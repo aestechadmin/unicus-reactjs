@@ -7,7 +7,7 @@ import Lenis from "lenis";
 import Observer from "gsap/Observer";
 
 import Hero from "./NewUnicus/Hero";
-import Experience from "./NewUnicus/Experience";
+// import Experience from "./NewUnicus/Experience";
 import Growth from "./NewUnicus/Growth";
 import Quote from "./NewUnicus/Quote";
 import Footer from "./NewUnicus/Footer";
@@ -195,9 +195,9 @@ export const scrollToQuote = () => {
 export default function NewUnicus() {
   const [activeSection, setActiveSection] = useState(0);
   const heroContainerRef = useRef(null);
-  const expSectionRef = useRef(null);
-  const endTitleRef = useRef(null);
-  const endButtonRef = useRef(null);
+  // const expSectionRef = useRef(null);
+  // const endTitleRef = useRef(null);
+  // const endButtonRef = useRef(null);
   const lenisRef = useRef(null);
   const rafRef = useRef(null);
 
