@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import MainLayout from "./layouts/MainLayout";
 import Unicus from "./pages/Unicus";
 import NewUnicus from "./pages/NewUnicus";
+import Unicuss from "./pages/Unicuss";
 import { Toaster } from "react-hot-toast";
 import ScrollToTop from "./utils/ScrollToTop";
 
@@ -26,8 +27,9 @@ function App() {
       <Routes>
         {/* ======================= MAIN WEBSITE ======================= */}
         <Route element={<MainLayout />}>
-          <Route path="/" element={<NewUnicus />} />
-          <Route path="/home" element={<Unicus />} />
+          <Route path="/" element={<Unicuss />} />
+          <Route path="/home" element={<NewUnicus />} />
+          <Route path="/unicus" element={<Unicus />} />
         </Route>
 
         {/* ======================= FALLBACK ======================= */}
