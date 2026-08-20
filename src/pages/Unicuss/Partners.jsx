@@ -13,11 +13,11 @@ const SPEED = 0.6;
 export default function Partners({ data }) {
   const isDesktop = useMediaQuery("(min-width:900px)");
   const visible = isDesktop ? 3 : 1;
-  const items = data.items || [];
-  const loopItems = useMemo(
-    () => (items.length ? Array.from({ length: COPIES }, () => items).flat() : []),
-    [items]
-  );
+  const items = data.items;
+  const loopItems = useMemo(() => {
+    if (!items?.length) return [];
+    return Array.from({ length: COPIES }, () => items).flat();
+  }, [items]);
 
   const wrapRef = useRef(null);
   const trackRef = useRef(null);
@@ -43,7 +43,7 @@ export default function Partners({ data }) {
   useEffect(() => {
     const wrap = wrapRef.current;
     const track = trackRef.current;
-    if (!wrap || !track || !items.length || !step) return;
+    if (!wrap || !track || !items?.length || !step) return;
 
     const loopWidth = items.length * step;
 
@@ -73,7 +73,7 @@ export default function Partners({ data }) {
       cancelAnimationFrame(raf);
       wrap.removeEventListener("wheel", onWheel);
     };
-  }, [items.length, step]);
+  }, [items, step]);
 
   const applyX = (next) => {
     const track = trackRef.current;
