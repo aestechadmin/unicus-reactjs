@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
-import { blueBtn, fadeUp, titleSx, viewport, scrollToId } from "./motion";
+import { FONT, blueBtn, fadeUp, titleSx, viewport, scrollToId } from "./motion";
 
 const GAP = 20;
 const COPIES = 4;
@@ -214,7 +214,7 @@ export default function Partners({ data }) {
                   <Box sx={{ position: "absolute", left: 18, right: 18, bottom: 18 }}>
                     <Typography
                       sx={{
-                        fontFamily: "'Inter', sans-serif",
+                        fontFamily: FONT,
                         color: "#fff",
                         fontWeight: 600,
                         fontSize: { xs: 16, md: 20 },

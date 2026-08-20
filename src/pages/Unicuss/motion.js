@@ -41,7 +41,7 @@ export const scaleIn = {
 
 export const viewport = { once: true, amount: 0.18 };
 
-export const FONT = "'Inter', sans-serif";
+export const FONT = "'Fustat', sans-serif";
 
 export const titleSx = {
   fontFamily: FONT,

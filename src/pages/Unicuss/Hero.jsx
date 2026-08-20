@@ -63,12 +63,12 @@ export default function Hero({ data }) {
               sx={{
                 fontFamily: FONT,
                 color: "#fff",
-                fontWeight: 500,
+                fontWeight: 600,
                 maxWidth: { xs: 360, sm: 700, md: 1200 },
                 mx: "auto",
                 lineHeight: 1.12,
                 letterSpacing: "-0.03em",
-                fontSize: { xs: 26, sm: 50, md: 70, lg: 80 },
+                fontSize: { xs: 26, sm: 50, md: 70, lg: 90 },
               }}
             >
               {data.title}

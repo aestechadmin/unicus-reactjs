@@ -1,30 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { AppBar, Toolbar, IconButton, Box, Typography, Stack, useTheme, useMediaQuery } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
-import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import MapPin from '@mui/icons-material/LocationOnOutlined';
 import Mail from '@mui/icons-material/MailOutlineOutlined';
 import Phone from '@mui/icons-material/CallOutlined';
 
+const ICONS = "/img/unicuss/icons";
+const LOGO = `${ICONS}/unicus.png`;
+const MENU = `${ICONS}/menu.png`;
+
 function Header({ onSectionClick, activeSection, sections }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : 'auto';
     return () => { document.body.style.overflow = 'auto'; };
   }, [open]);
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 1000);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const goTo = (id) => {
     const index = sections.findIndex((section) => section.id === id);
@@ -62,42 +58,59 @@ function Header({ onSectionClick, activeSection, sections }) {
         position="fixed"
         elevation={0}
         sx={{
-          top: { xs: 0, md: 0 },
-          background: scrolled ? "rgba(8, 18, 35, 0.04)" : "transparent",
-          backdropFilter: scrolled ? "blur(18px)" : 'none',
-          boxShadow: 'none',
+          top: 0,
+          overflow: "hidden",
+          background: "linear-gradient(360deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.49) 100%)",
+          boxShadow: "none",
           py: 1.5,
-          zIndex: scrolled ? 1200 : 1201,
+          zIndex: 1201,
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            left: "50%",
+            top: 0,
+            bottom: 0,
+            width: "100%",
+            transform: "translateX(-50%)",
+            background: "linear-gradient(360deg, rgba(255, 255, 255, 0.91) 0%, rgba(255, 255, 255, 0.96) 100%)",
+            filter: "blur(50px)",
+            backdropFilter: "blur(80px)",
+            WebkitMaskImage: "linear-gradient(180deg, #000 0%, transparent 100%)",
+            maskImage: "linear-gradient(180deg, #000 0%, transparent 100%)",
+            pointerEvents: "none",
+          },
         }}
       >
         <Toolbar sx={{
           justifyContent: 'space-between',
           px: { xs: 1.5, sm: 2, md: 4 },
           minHeight: { xs: 56, md: 64 },
+          position: "relative",
+          zIndex: 1,
         }}>
 
           {/* Menu button */}
           <IconButton
             onClick={() => setOpen(!open)}
             sx={{
-              color: '#fff',
-              width: { xs: 44, sm: 50, md: 60 },
-              height: { xs: 44, sm: 50, md: 60 },
-              borderRadius: '50%',
-              border: '1px solid rgba(255,255,255,0.18)',
-              background: 'rgba(255,255,255,0.05)',
-              backdropFilter: 'blur(14px)',
-              transition: 'all 0.3s',
-              '&:hover': {
-                transform: 'scale(1.05)',
-                background: 'rgba(255,255,255,0.15)',
-              },
+              color: "#fff",
+              p: 0,
+              borderRadius: 0,
+              "&:hover": { background: "transparent", transform: "scale(1.06)" },
             }}
           >
-            {open
-              ? <CloseIcon sx={{ fontSize: { xs: 18, md: 24 } }} />
-              : <MenuIcon sx={{ fontSize: { xs: 18, md: 24 } }} />
-            }
+            <Box
+              component="img"
+              src={MENU}
+              alt="Menu"
+              sx={{
+                width: { xs: 22, md: 80 },
+                height: { xs: 14, md: 50 },
+                objectFit: "contain",
+                mixBlendMode: "screen",
+                display: "block",
+              }}
+            />
           </IconButton>
 
           {/* Logo */}
@@ -110,16 +123,17 @@ function Header({ onSectionClick, activeSection, sections }) {
               cursor: 'pointer',
             }}
           >
-            <Typography sx={{
-              fontSize: { xs: 18, sm: 22, md: 44 },
-              color: '#fff',
-              fontWeight: 700,
-              background: '#FFF',
-              lineHeight: 1.4,
-              WebkitBackgroundClip: 'text',
-            }}>
-              Unicus
-            </Typography>
+            <Box
+              component="img"
+              src={LOGO}
+              alt="Unicus"
+              sx={{
+                height: { xs: 22, sm: 28, md: 44 },
+                width: "auto",
+                display: "block",
+                mixBlendMode: "screen",
+              }}
+            />
           </Box>
 
           {/* Get Quote */}
@@ -143,7 +157,7 @@ function Header({ onSectionClick, activeSection, sections }) {
             }}
           >
             <Typography sx={{
-              fontWeight: 500,
+              fontWeight: 600,
               fontSize: { xs: 12, sm: 12, md: 14 },
               letterSpacing: { xs: 0.5, md: 1 },
             }}>
@@ -200,16 +214,13 @@ function Header({ onSectionClick, activeSection, sections }) {
               <IconButton
                 onClick={() => setOpen(false)}
                 sx={{
-                  color: '#fff',
-                  width: { xs: 40, md: 50 },
-                  height: { xs: 40, md: 50 },
-                  borderRadius: '50%',
-                  border: '1px solid rgba(255,255,255,0.18)',
-                  background: 'rgba(255,255,255,0.05)',
-                  '&:hover': { transform: 'scale(1.05)', background: 'rgba(255,255,255,0.15)' },
+                  color: "#fff",
+                  p: 0,
+                  borderRadius: 0,
+                  "&:hover": { background: "transparent", transform: "scale(1.06)" },
                 }}
               >
-                <CloseIcon sx={{ fontSize: { xs: 18, md: 24 } }} />
+                <CloseIcon sx={{ fontSize: { xs: 18, md: 40 } }} />
               </IconButton>
 
               {/* Logo */}
@@ -217,7 +228,16 @@ function Header({ onSectionClick, activeSection, sections }) {
                 onClick={() => goTo("hero")}
                 sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, md: 1 }, cursor: 'pointer' }}
               >
-                <Typography sx={{ fontSize: { xs: 18, sm: 20, md: 40 }, fontWeight: 700 }}>Unicus</Typography>
+                <Box
+                  component="img"
+                  src={LOGO}
+                  alt="Unicus"
+                  sx={{
+                    height: { xs: 22, sm: 26, md: 40 },
+                    width: "auto",
+                    display: "block",
+                  }}
+                />
               </Box>
 
               {/* Get Quote */}
@@ -240,7 +260,7 @@ function Header({ onSectionClick, activeSection, sections }) {
                   },
                 }}
               >
-                <Typography sx={{ fontSize: { xs: 12, sm: 12, md: 14 }, fontWeight: 500 }}>Get Quote</Typography>
+                <Typography sx={{ fontSize: { xs: 12, sm: 12, md: 14 }, fontWeight: 600 }}>Get Quote</Typography>
                 <NorthEastIcon sx={{ fontSize: { xs: 14, sm: 18, md: 14 } }} />
               </Box>
             </motion.div>

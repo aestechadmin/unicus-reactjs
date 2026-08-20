@@ -50,7 +50,7 @@ export default function VisionMission({ data }) {
 
         <Box>
           <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={fadeUp}>
-            <Typography sx={{ color: "#fff", fontWeight: 600, fontSize: { xs: 18, md: 24 }, textAlign: "left" }}>
+            <Typography sx={{ color: "#fff", fontWeight: 600, fontSize: { xs: 18, md: 30 }, textAlign: "left" }}>
               {data.visionTitle}
             </Typography>
             {data.visionText && (
@@ -73,7 +73,7 @@ export default function VisionMission({ data }) {
               sx={{
                 color: "#fff",
                 fontWeight: 600,
-                fontSize: { xs: 18, md: 24 },
+                fontSize: { xs: 18, md: 30 },
                 textAlign: "left",
                 mb: { xs: 2.5, md: 4 },
               }}

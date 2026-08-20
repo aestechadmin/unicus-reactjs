@@ -52,6 +52,7 @@ export default function Expertise({ data }) {
                   minHeight: { xs: 150, md: 200 },
                   display: "flex",
                   flexDirection: "column",
+                  border: "1px solid #0000001A",
                 }}
               >
                 <Box

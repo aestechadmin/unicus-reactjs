@@ -241,7 +241,18 @@ export default function Contact({ data }) {
             {data.items.map((item, index) => {
               const Icon = icons[index];
               return (
-                <Box key={item.title} component={motion.div} variants={fadeLeft} sx={{ display: "flex", gap: { xs: 1.5, md: 2 } }}>
+                <Box
+                  key={item.title}
+                  component={motion.div}
+                  variants={fadeLeft}
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: { xs: "42px 1fr", md: "42px 120px 1fr" },
+                    columnGap: { xs: 1.5, md: 2 },
+                    rowGap: 0.4,
+                    alignItems: "center",
+                  }}
+                >
                   <Box
                     sx={{
                       width: 42,
@@ -257,35 +268,25 @@ export default function Contact({ data }) {
                   >
                     <Icon sx={{ fontSize: 20 }} />
                   </Box>
-                  <Box
+                  <Typography sx={{ ...bodySx, color: "#fff", fontWeight: 600, textAlign: "left" }}>
+                    {item.title}
+                  </Typography>
+                  <Typography
+                    component={item.href ? "a" : "p"}
+                    href={item.href}
                     sx={{
-                      display: "flex",
-                      flexDirection: { xs: "column", md: "row" },
-                      alignItems: { xs: "flex-start", md: "center" },
-                      flex: 1,
-                      minWidth: 0,
+                      ...bodySx,
+                      color: "#fff",
+                      textAlign: "left",
+                      textDecoration: "none",
+                      fontWeight: 600,
+                      m: 0,
+                      wordBreak: "break-word",
+                      gridColumn: { xs: "2", md: "3" },
                     }}
                   >
-                    <Typography sx={{ ...bodySx, color: "#fff", fontWeight: 600, textAlign: "left", flexShrink: 0 }}>
-                      {item.title}
-                    </Typography>
-                    <Typography
-                      component={item.href ? "a" : "p"}
-                      href={item.href}
-                      sx={{
-                        ...bodySx,
-                        color: "#fff",
-                        textAlign: "left",
-                        textDecoration: "none",
-                        fontWeight: 600,
-                        m: 0,
-                        ml: { xs: 0, md: 8 },
-                        wordBreak: "break-word",
-                      }}
-                    >
-                      {item.value}
-                    </Typography>
-                  </Box>
+                    {item.value}
+                  </Typography>
                 </Box>
               );
             })}

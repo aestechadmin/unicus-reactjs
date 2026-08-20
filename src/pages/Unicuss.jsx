@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Box } from "@mui/material";
+import { ThemeProvider, createTheme, useTheme } from "@mui/material/styles";
 import { menuSections, pageSections, websiteData } from "./Unicuss/data";
 import Header from "./Unicuss/Header";
 import Hero from "./Unicuss/Hero";
@@ -13,6 +14,7 @@ import Partners from "./Unicuss/Partners";
 import Contact from "./Unicuss/Contact";
 import Footer from "./Unicuss/Footer";
 import { FONT, scrollToId } from "./Unicuss/motion";
+import "./Unicuss/fustat.css";
 
 export { websiteData };
 
@@ -31,6 +33,17 @@ const COMPONENTS = {
 
 export default function Unicuss() {
   const [activeSection, setActiveSection] = useState(0);
+  const theme = useTheme();
+  const fustatTheme = useMemo(
+    () =>
+      createTheme(theme, {
+        typography: {
+          ...theme.typography,
+          fontFamily: FONT,
+        },
+      }),
+    [theme]
+  );
 
   const handleSectionClick = useCallback((index) => {
     const target = menuSections[index];
@@ -40,6 +53,7 @@ export default function Unicuss() {
   }, []);
 
   return (
+    <ThemeProvider theme={fustatTheme}>
     <Box sx={{ fontFamily: FONT, overflowX: "hidden", width: "100%", maxWidth: "100%" }}>
       <Header
         onSectionClick={handleSectionClick}
@@ -55,5 +69,6 @@ export default function Unicuss() {
         );
       })}
     </Box>
+    </ThemeProvider>
   );
 }
