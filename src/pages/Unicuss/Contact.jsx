@@ -369,7 +369,7 @@ export default function Contact({ data }) {
               }}
             />
             <FormControl variant="standard" error={Boolean(errors.type)} sx={underline}>
-              <FormLabel sx={{ fontFamily: FONT, fontSize: 12, mb: 0.5 }}>Type</FormLabel>
+              <FormLabel sx={{ fontFamily: FONT, fontSize: 12, mb: 0.5, textAlign: "left" }}>Type</FormLabel>
               <RadioGroup row name="type" value={form.type} onChange={onChange} sx={{ flexWrap: "wrap" }}>
                 <FormControlLabel
                   value="Residential"
