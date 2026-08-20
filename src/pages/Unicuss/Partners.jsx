@@ -77,7 +77,7 @@ export default function Partners({ data }) {
 
   const applyX = (next) => {
     const track = trackRef.current;
-    const loopWidth = items.length * step;
+    const loopWidth = (items?.length ?? 0) * step;
     if (!track || loopWidth <= 0) return;
     let x = next;
     while (x <= -loopWidth) x += loopWidth;
