@@ -18,8 +18,15 @@ function Header({ onSectionClick, activeSection, sections }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : 'auto';
-    return () => { document.body.style.overflow = 'auto'; };
+    document.body.style.overflow = open ? "hidden" : "auto";
+    if (window.__lenis) {
+      if (open) window.__lenis.stop();
+      else window.__lenis.start();
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+      window.__lenis?.start();
+    };
   }, [open]);
 
   const goTo = (id) => {

@@ -2,6 +2,10 @@ export const scrollToId = (id) => {
   if (typeof window === "undefined" || typeof document === "undefined") return;
   const el = document.getElementById(id);
   if (!el) return;
+  if (window.__lenis) {
+    window.__lenis.scrollTo(el, { offset: -80, duration: 1.4 });
+    return;
+  }
   const top = el.getBoundingClientRect().top + window.scrollY - 80;
   window.scrollTo({ top, behavior: "smooth" });
 };

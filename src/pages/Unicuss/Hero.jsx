@@ -1,10 +1,34 @@
-import React from "react";
-import { Box, Typography, Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import { motion } from "framer-motion";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
 import { fadeUp, FONT, scrollToId } from "./motion";
 
 export default function Hero({ data }) {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!data?.backgroundImage) {
+      setLoaded(true);
+      return;
+    }
+
+    const img = new Image();
+    img.src = data.backgroundImage;
+    if (img.complete && img.naturalWidth > 0) {
+      setLoaded(true);
+      return;
+    }
+
+    const done = () => setLoaded(true);
+    img.onload = done;
+    img.onerror = done;
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, [data?.backgroundImage]);
+
   return (
     <Box
       sx={{
@@ -25,15 +49,25 @@ export default function Hero({ data }) {
           overflow: "hidden",
           borderBottomLeftRadius: { xs: 40, sm: 56, md: 250 },
           borderBottomRightRadius: { xs: 40, sm: 56, md: 250 },
+          bgcolor: "#1E3A8A",
         }}
       >
         <Box
+          component="img"
+          src={data.backgroundImage}
+          alt=""
+          fetchPriority="high"
+          decoding="async"
+          onLoad={() => setLoaded(true)}
           sx={{
             position: "absolute",
             inset: 0,
-            backgroundImage: `url(${data.backgroundImage})`,
-            backgroundSize: "cover",
-            backgroundPosition: { xs: "center 30%", md: "center 20%" },
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: { xs: "center 30%", md: "center 20%" },
+            opacity: loaded ? 1 : 0,
+            transition: "opacity 0.45s ease",
           }}
         />
         <Box
@@ -44,6 +78,23 @@ export default function Hero({ data }) {
               "linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.72) 100%)",
           }}
         />
+
+        {!loaded && (
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 3,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              bgcolor: "#1E3A8A",
+            }}
+          >
+            <CircularProgress size={42} thickness={4} sx={{ color: "#fff" }} />
+          </Box>
+        )}
+
         <Box
           sx={{
             position: "relative",

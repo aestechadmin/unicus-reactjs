@@ -1,6 +1,7 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box } from "@mui/material";
 import { ThemeProvider, createTheme, useTheme } from "@mui/material/styles";
+import Lenis from "lenis";
 import { menuSections, pageSections, websiteData } from "./Unicuss/data";
 import Header from "./Unicuss/Header";
 import Hero from "./Unicuss/Hero";
@@ -44,6 +45,27 @@ export default function Unicuss() {
       }),
     [theme]
   );
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.4,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      touchMultiplier: 1.1,
+    });
+    window.__lenis = lenis;
+    let rafId;
+    const raf = (time) => {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    };
+    rafId = requestAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+      if (window.__lenis === lenis) window.__lenis = undefined;
+    };
+  }, []);
 
   const handleSectionClick = useCallback((index) => {
     const target = menuSections[index];
