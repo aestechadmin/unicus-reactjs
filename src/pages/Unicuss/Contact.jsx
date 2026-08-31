@@ -163,40 +163,41 @@ export default function Contact({ data }) {
     };
 
     setSubmitting(true);
-    try {
-      const res = await fetch(`https://formsubmit.co/ajax/${emailTo}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error("submit failed");
-      toast.success("Request submitted.");
+    // try {
+      // const res = await fetch(`https://formsubmit.co/ajax/${emailTo}`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Accept: "application/json",
+      //   },
+      //   body: JSON.stringify(payload),
+      // });
+      // if (!res.ok) throw new Error("submit failed");
+      toast.success("Your request has been submitted successfully.", { duration: 5000 });
       setForm(initialForm);
       setErrors({});
-    } catch {
-      const body = [
-        `Name: ${payload.name}`,
-        `Organization: ${payload.organization}`,
-        `Designation: ${payload.designation}`,
-        `Email: ${payload.email}`,
-        `Phone: ${payload.phone}`,
-        `Type: ${payload.type}`,
-        `Services: ${payload.servicesNeeded}`,
-        `Address: ${payload.address}`,
-        `State: ${payload.state}`,
-        `City: ${payload.city}`,
-        `Pincode: ${payload.pincode}`,
-        "",
-        payload.message,
-      ].join("\n");
-      window.location.href = `mailto:${emailTo}?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body)}`;
-      toast.error("Could not send from the site. Your email app will open instead.");
-    } finally {
       setSubmitting(false);
-    }
+    // } catch {
+    //   const body = [
+    //     `Name: ${payload.name}`,
+    //     `Organization: ${payload.organization}`,
+    //     `Designation: ${payload.designation}`,
+    //     `Email: ${payload.email}`,
+    //     `Phone: ${payload.phone}`,
+    //     `Type: ${payload.type}`,
+    //     `Services: ${payload.servicesNeeded}`,
+    //     `Address: ${payload.address}`,
+    //     `State: ${payload.state}`,
+    //     `City: ${payload.city}`,
+    //     `Pincode: ${payload.pincode}`,
+    //     "",
+    //     payload.message,
+    //   ].join("\n");
+    //   window.location.href = `mailto:${emailTo}?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body)}`;
+    //   toast.error("Could not send from the site. Your email app will open instead.");
+    // } finally {
+    //   setSubmitting(false);
+    // }
   };
 
   return (

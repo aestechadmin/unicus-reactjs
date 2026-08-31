@@ -22,7 +22,11 @@ function App() {
       <ScrollToTop />
       <Toaster
         position="top-center"
-        toastOptions={{ style: { zIndex: 9999, fontSize: 15 } }}
+        toastOptions={{
+          duration: 5000,
+          style: { zIndex: 9999, fontSize: 15 },
+          success: { duration: 5000 },
+        }}
       />
       <Routes>
         {/* ======================= MAIN WEBSITE ======================= */}
