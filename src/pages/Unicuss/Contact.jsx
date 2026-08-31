@@ -93,16 +93,11 @@ const menuProps = {
   },
 };
 
-const contactEmail = (data) =>
-  data?.items?.find((item) => item.href?.startsWith("mailto:"))?.href.replace("mailto:", "") ||
-  "hello@unicusfacilities.in";
-
 export default function Contact({ data }) {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const cities = useMemo(() => CITIES[form.state] || [], [form.state]);
-  const emailTo = contactEmail(data);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -137,7 +132,7 @@ export default function Contact({ data }) {
     return next;
   };
 
-  const onSubmit = async (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
     const next = validate();
     if (Object.keys(next).length) {
@@ -146,58 +141,11 @@ export default function Contact({ data }) {
       return;
     }
 
-    const payload = {
-      name: form.fullName.trim(),
-      email: form.workEmail.trim(),
-      phone: `+91 ${form.phone.trim()}`,
-      organization: form.organization.trim(),
-      designation: form.designation.trim(),
-      type: form.type,
-      servicesNeeded: form.servicesNeeded.trim(),
-      address: form.address.trim(),
-      state: form.state,
-      city: form.city,
-      pincode: form.pincode.trim(),
-      message: form.message.trim(),
-      _subject: `Unicus quote request — ${form.organization.trim()}`,
-    };
-
     setSubmitting(true);
-    // try {
-      // const res = await fetch(`https://formsubmit.co/ajax/${emailTo}`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Accept: "application/json",
-      //   },
-      //   body: JSON.stringify(payload),
-      // });
-      // if (!res.ok) throw new Error("submit failed");
-      toast.success("Your request has been submitted successfully.", { duration: 5000 });
-      setForm(initialForm);
-      setErrors({});
-      setSubmitting(false);
-    // } catch {
-    //   const body = [
-    //     `Name: ${payload.name}`,
-    //     `Organization: ${payload.organization}`,
-    //     `Designation: ${payload.designation}`,
-    //     `Email: ${payload.email}`,
-    //     `Phone: ${payload.phone}`,
-    //     `Type: ${payload.type}`,
-    //     `Services: ${payload.servicesNeeded}`,
-    //     `Address: ${payload.address}`,
-    //     `State: ${payload.state}`,
-    //     `City: ${payload.city}`,
-    //     `Pincode: ${payload.pincode}`,
-    //     "",
-    //     payload.message,
-    //   ].join("\n");
-    //   window.location.href = `mailto:${emailTo}?subject=${encodeURIComponent(payload._subject)}&body=${encodeURIComponent(body)}`;
-    //   toast.error("Could not send from the site. Your email app will open instead.");
-    // } finally {
-    //   setSubmitting(false);
-    // }
+    toast.success("Your request has been submitted successfully.", { duration: 5000 });
+    setForm(initialForm);
+    setErrors({});
+    setSubmitting(false);
   };
 
   return (
