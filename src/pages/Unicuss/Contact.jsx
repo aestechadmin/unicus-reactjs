@@ -164,17 +164,21 @@ export default function Contact({ data }) {
     };
 
     setSubmitting(true);
+    const toastId = toast.loading("Submitting your request...");
     try {
       await fetch(scriptUrl, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload),
       });
-      toast.success("Your request has been submitted successfully.", { duration: 5000 });
+      toast.success("Your request has been submitted successfully.", {
+        id: toastId,
+        duration: 5000,
+      });
       setForm(initialForm);
       setErrors({});
     } catch {
-      toast.error("Could not submit right now. Please try again.");
+      toast.error("Could not submit right now. Please try again.", { id: toastId });
     } finally {
       setSubmitting(false);
     }
