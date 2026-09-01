@@ -143,15 +143,15 @@ export default function Hero({ data }) {
             onClick={() => scrollToId(data.targetId)}
             endIcon={<NorthEastIcon sx={{ fontSize: { xs: 14, sm: 16, md: 16 } }} />}
             sx={{
-              fontFamily: FONT,
+              // fontFamily: FONT,
               bgcolor: "#fff",
               color: "#111",
               borderRadius: 2,
               px: { xs: 2.2, md: 2.8 },
               py: { xs: 0.8, md: 1 },
-              fontWeight: 700,
+              fontWeight: 600,
               textTransform: "none",
-              fontSize: { xs: 15, md: 18 },
+              fontSize: { xs: 15, md: 16 },
               "&:hover": { bgcolor: "#F3F4F6" },
             }}
           >
