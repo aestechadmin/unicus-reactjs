@@ -138,6 +138,7 @@ export default function Hero({ data }) {
           bgcolor: "#3B82F6",
         }}
       >
+        
         <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
           <Button
             onClick={() => scrollToId(data.targetId)}
