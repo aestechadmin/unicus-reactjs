@@ -132,7 +132,7 @@ export default function Contact({ data }) {
     return next;
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const next = validate();
     if (Object.keys(next).length) {
@@ -141,11 +141,43 @@ export default function Contact({ data }) {
       return;
     }
 
+    const scriptUrl = process.env.REACT_APP_GOOGLE_SCRIPT_URL;
+    if (!scriptUrl) {
+      toast.error("Form is not connected yet. Please try again later.");
+      return;
+    }
+
+    const payload = {
+      timestamp: new Date().toISOString(),
+      fullName: form.fullName.trim(),
+      organization: form.organization.trim(),
+      designation: form.designation.trim(),
+      workEmail: form.workEmail.trim(),
+      phone: `+91 ${form.phone.trim()}`,
+      type: form.type,
+      servicesNeeded: form.servicesNeeded.trim(),
+      address: form.address.trim(),
+      state: form.state,
+      city: form.city,
+      pincode: form.pincode.trim(),
+      message: form.message.trim(),
+    };
+
     setSubmitting(true);
-    toast.success("Your request has been submitted successfully.", { duration: 5000 });
-    setForm(initialForm);
-    setErrors({});
-    setSubmitting(false);
+    try {
+      await fetch(scriptUrl, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+      });
+      toast.success("Your request has been submitted successfully.", { duration: 5000 });
+      setForm(initialForm);
+      setErrors({});
+    } catch {
+      toast.error("Could not submit right now. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
