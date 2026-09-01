@@ -153,7 +153,7 @@ export default function Contact({ data }) {
       organization: form.organization.trim(),
       designation: form.designation.trim(),
       workEmail: form.workEmail.trim(),
-      phone: `+91 ${form.phone.trim()}`,
+      phone: `' +91 ${form.phone.trim()}`,
       type: form.type,
       servicesNeeded: form.servicesNeeded.trim(),
       address: form.address.trim(),
