@@ -1,21 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Toolbar, IconButton, Box, Typography, Stack, useTheme, useMediaQuery } from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AppBar, Toolbar, IconButton, Box, Typography, Stack } from '@mui/material';
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import CloseIcon from '@mui/icons-material/Close';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import MapPin from '@mui/icons-material/LocationOnOutlined';
 import Mail from '@mui/icons-material/MailOutlineOutlined';
 import Phone from '@mui/icons-material/CallOutlined';
 
+import { pagePx, scrollToId } from "./motion";
+
 const ICONS = "/img/unicuss/icons";
 const LOGO = `${ICONS}/unicus.png`;
 const MENU = `${ICONS}/menu.png`;
+const logoSpring = { type: "spring", stiffness: 420, damping: 34 };
+
+function LogoMark({ onClick, overlay = false }) {
+  return (
+    <Box
+      component={motion.div}
+      layoutId="unicus-logo"
+      transition={logoSpring}
+      onClick={onClick}
+      sx={{ display: "flex", alignItems: "center", cursor: "pointer", zIndex: 3 }}
+    >
+      <Box
+        component="img"
+        src={LOGO}
+        alt="Unicus"
+        sx={{
+          height: overlay
+            ? { xs: 22, sm: 26, md: 34, lg: 40, xl: 44 }
+            : { xs: 22, sm: 28, md: 36, lg: 44, xl: 48 },
+          width: "auto",
+          display: "block",
+          mixBlendMode: overlay ? "normal" : "screen",
+        }}
+      />
+    </Box>
+  );
+}
 
 function Header({ onSectionClick, activeSection, sections }) {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const [open, setOpen] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "auto";
@@ -29,11 +56,26 @@ function Header({ onSectionClick, activeSection, sections }) {
     };
   }, [open]);
 
+  useEffect(() => {
+    const hero = document.getElementById("hero");
+    if (!hero) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        setPastHero(entry.boundingClientRect.bottom < 88);
+      },
+      { threshold: [0, 0.08, 0.2, 0.5, 1] }
+    );
+    io.observe(hero);
+    return () => io.disconnect();
+  }, []);
+
   const goTo = (id) => {
     const index = sections.findIndex((section) => section.id === id);
-    if (index < 0) return;
-    onSectionClick(index);
     setOpen(false);
+    window.setTimeout(() => {
+      if (index >= 0) onSectionClick(index);
+      else scrollToId(id);
+    }, 120);
   };
 
   const menuItems = sections
@@ -42,23 +84,24 @@ function Header({ onSectionClick, activeSection, sections }) {
 
   const contactItems = [
     {
-      icon: <MapPin sx={{ fontSize: { xs: 16, md: 20 } }} />,
+      icon: <MapPin sx={{ fontSize: { xs: 16, sm: 17, md: 18, lg: 20, xl: 20 } }} />,
       title: 'Office',
       value: '3rd Floor, Habsiguda Main Road, Hyderabad, Telangana'
     },
     {
-      icon: <Mail sx={{ fontSize: { xs: 16, md: 20 } }} />,
+      icon: <Mail sx={{ fontSize: { xs: 16, sm: 17, md: 18, lg: 20, xl: 20 } }} />,
       title: 'Email',
       value: 'hello@unicusfacilities.in'
     },
     {
-      icon: <Phone sx={{ fontSize: { xs: 16, md: 20 } }} />,
+      icon: <Phone sx={{ fontSize: { xs: 16, sm: 17, md: 18, lg: 20, xl: 20 } }} />,
       title: 'Call Us',
       value: '+91 9550322111'
     },
   ];
 
   return (
+    <LayoutGroup>
     <>
       {/* ── AppBar ── */}
       <AppBar
@@ -66,7 +109,7 @@ function Header({ onSectionClick, activeSection, sections }) {
         elevation={0}
         sx={{
           top: 0,
-          overflow: "hidden",
+          overflow: "visible",
           background: "linear-gradient(360deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.49) 100%)",
           boxShadow: "none",
           py: 1.5,
@@ -88,14 +131,17 @@ function Header({ onSectionClick, activeSection, sections }) {
           },
         }}
       >
-        <Toolbar sx={{
+        <Toolbar
+          disableGutters
+          sx={{
           justifyContent: 'space-between',
-          px: { xs: 1.5, sm: 2, md: 4 },
-          minHeight: { xs: 56, md: 64 },
+          px: pagePx,
+          minHeight: { xs: 56, sm: 58, md: 62, lg: 64, xl: 64 },
           position: "relative",
           zIndex: 1,
         }}>
 
+          <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1.2, sm: 1.6, md: 2, lg: 2.5, xl: 2.5 } }}>
           {/* Menu button */}
           <IconButton
             onClick={() => setOpen(!open)}
@@ -111,37 +157,30 @@ function Header({ onSectionClick, activeSection, sections }) {
               src={MENU}
               alt="Menu"
               sx={{
-                width: { xs: 22, md: 80 },
-                height: { xs: 14, md: 50 },
+                width: { xs: 22, sm: 36, md: 56, lg: 80, xl: 80 },
+                height: { xs: 14, sm: 22, md: 36, lg: 50, xl: 50 },
                 objectFit: "contain",
                 mixBlendMode: "screen",
                 display: "block",
               }}
             />
           </IconButton>
-
-          {/* Logo */}
-          <Box
-            onClick={() => goTo("hero")}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: { xs: 0.5, md: 1 },
-              cursor: 'pointer',
-            }}
-          >
-            <Box
-              component="img"
-              src={LOGO}
-              alt="Unicus"
-              sx={{
-                height: { xs: 22, sm: 28, md: 44 },
-                width: "auto",
-                display: "block",
-                mixBlendMode: "screen",
-              }}
-            />
+          {!open && !pastHero && <LogoMark onClick={() => goTo("hero")} />}
           </Box>
+
+          {!open && pastHero && (
+            <Box
+              sx={{
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 3,
+              }}
+            >
+              <LogoMark onClick={() => goTo("hero")} />
+            </Box>
+          )}
 
           {/* Get Quote */}
           <Box
@@ -149,12 +188,12 @@ function Header({ onSectionClick, activeSection, sections }) {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              gap: { xs: 0.5, md: 1 },
+              gap: { xs: 0.5, sm: 0.65, md: 0.85, lg: 1, xl: 1 },
               color: 'black',
               background: 'white',
               cursor: 'pointer',
-              px: { xs: 1, sm: 1.5, md: 2 },
-              py: { xs: 0.8, md: 1.1 },
+              px: { xs: 1, sm: 1.25, md: 1.75, lg: 2, xl: 2 },
+              py: { xs: 0.8, sm: 0.9, md: 1, lg: 1.1, xl: 1.1 },
               borderRadius: 2,
               transition: 'all 0.3s',
               '&:hover': {
@@ -165,12 +204,12 @@ function Header({ onSectionClick, activeSection, sections }) {
           >
             <Typography sx={{
               fontWeight: 600,
-              fontSize: { xs: 12, sm: 12, md: 14 },
-              letterSpacing: { xs: 0.5, md: 1 },
+              fontSize: { xs: 12, sm: 12, md: 13, lg: 14, xl: 14 },
+              letterSpacing: { xs: 0.5, sm: 0.65, md: 0.85, lg: 1, xl: 1 },
             }}>
               Get Quote
             </Typography>
-            <NorthEastIcon sx={{ fontSize: { xs: 14, sm: 18, md: 14 } }} />
+            <NorthEastIcon sx={{ fontSize: { xs: 14, sm: 15, md: 16, lg: 14, xl: 14 } }} />
           </Box>
         </Toolbar>
       </AppBar>
@@ -201,23 +240,24 @@ function Header({ onSectionClick, activeSection, sections }) {
             }}
           >
             {/* Menu Header */}
-            <motion.div
+            <Box
+              component={motion.div}
               initial={{ y: -80, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -80, opacity: 0 }}
               transition={{ duration: 0.5 }}
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: isMobile ? '12px 16px' : isTablet ? '16px 24px' : '20px 30px',
-                position: 'sticky',
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                px: pagePx,
+                py: { xs: 1.5, sm: 2, md: 2.25, lg: 2.5, xl: 2.5 },
+                position: "relative",
                 top: 0,
                 zIndex: 10,
-                background: 'inherit',
+                bgcolor: "inherit",
               }}
             >
-              {/* Close */}
               <IconButton
                 onClick={() => setOpen(false)}
                 sx={{
@@ -227,24 +267,19 @@ function Header({ onSectionClick, activeSection, sections }) {
                   "&:hover": { background: "transparent", transform: "scale(1.06)" },
                 }}
               >
-                <CloseIcon sx={{ fontSize: { xs: 18, md: 40 } }} />
+                <CloseIcon sx={{ fontSize: { xs: 18, sm: 24, md: 32, lg: 40, xl: 40 } }} />
               </IconButton>
 
-              {/* Logo */}
               <Box
-                onClick={() => goTo("hero")}
-                sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.5, md: 1 }, cursor: 'pointer' }}
+                sx={{
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: 3,
+                }}
               >
-                <Box
-                  component="img"
-                  src={LOGO}
-                  alt="Unicus"
-                  sx={{
-                    height: { xs: 22, sm: 26, md: 40 },
-                    width: "auto",
-                    display: "block",
-                  }}
-                />
+                <LogoMark overlay onClick={() => goTo("hero")} />
               </Box>
 
               {/* Get Quote */}
@@ -253,12 +288,12 @@ function Header({ onSectionClick, activeSection, sections }) {
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: { xs: 0.5, md: 1 },
+                  gap: { xs: 0.5, sm: 0.65, md: 0.85, lg: 1, xl: 1 },
                   color: 'black',
                   background: 'white',
                   cursor: 'pointer',
-                  px: { xs: 1, sm: 1.5, md: 2 },
-                  py: { xs: 0.8, md: 1.1 },
+                  px: { xs: 1, sm: 1.25, md: 1.75, lg: 2, xl: 2 },
+                  py: { xs: 0.8, sm: 0.9, md: 1, lg: 1.1, xl: 1.1 },
                   borderRadius: 2,
                   transition: 'all 0.3s',
                   '&:hover': {
@@ -267,31 +302,31 @@ function Header({ onSectionClick, activeSection, sections }) {
                   },
                 }}
               >
-                <Typography sx={{ fontSize: { xs: 12, sm: 12, md: 14 }, fontWeight: 600 }}>Get Quote</Typography>
-                <NorthEastIcon sx={{ fontSize: { xs: 14, sm: 18, md: 14 } }} />
+                <Typography sx={{ fontSize: { xs: 12, sm: 12, md: 13, lg: 14, xl: 14 }, fontWeight: 600 }}>Get Quote</Typography>
+                <NorthEastIcon sx={{ fontSize: { xs: 14, sm: 15, md: 16, lg: 14, xl: 14 } }} />
               </Box>
-            </motion.div>
+            </Box>
 
             {/* Menu Content */}
             <Box sx={{
               display: 'flex',
-              flexDirection: { xs: 'column', md: 'row' },
-              px: { xs: 2, sm: 4, md: 10 },
-              py: { xs: 2, md: 0 },
-              minHeight: { xs: 'auto', md: 'calc(100vh - 100px)' },
-              gap: { xs: 4, md: 0 },
+              flexDirection: { xs: "column", sm: "column", md: "row", lg: "row", xl: "row" },
+              px: { xs: 2, sm: 4, md: 7, lg: 10, xl: 10 },
+              py: { xs: 2, sm: 2, md: 0, lg: 0, xl: 0 },
+              minHeight: { xs: "auto", sm: "auto", md: "calc(100vh - 100px)", lg: "calc(100vh - 100px)", xl: "calc(100vh - 100px)" },
+              gap: { xs: 4, sm: 4, md: 0, lg: 0, xl: 0 },
             }}>
 
               {/* ── Nav Links (mobile: first, desktop: right) ── */}
               <Box sx={{
                 flex: 1.4,
                 display: 'flex',
-                justifyContent: { xs: 'flex-start', md: 'center' },
-                alignItems: { xs: 'flex-start', md: 'center' },
-                order: { xs: 1, md: 2 },
-                py: { xs: 0, md: 0 },
+                justifyContent: { xs: "flex-start", sm: "flex-start", md: "center", lg: "center", xl: "center" },
+                alignItems: { xs: "flex-start", sm: "flex-start", md: "center", lg: "center", xl: "center" },
+                order: { xs: 1, sm: 1, md: 2, lg: 2, xl: 2 },
+                py: { xs: 0, sm: 0, md: 0, lg: 0, xl: 0 },
               }}>
-                <Stack spacing={{ xs: 0.5, sm: 1, md: 2 }}>
+                <Stack spacing={{ xs: 0.5, sm: 1, md: 1.5, lg: 2, xl: 2 }}>
                   {menuItems.map((item, index) => (
                     <motion.div
                       key={item.label}
@@ -300,42 +335,42 @@ function Header({ onSectionClick, activeSection, sections }) {
                       exit={{ opacity: 0, y: 80 }}
                     >
                       <Typography
-                        onClick={() => { onSectionClick(item.index); setOpen(false); }}
+                        onClick={() => goTo(item.id)}
                         sx={{
-                          fontSize: { xs: 26, sm: 36, md: 55, lg: 60 },
+                          fontSize: { xs: 26, sm: 36, md: 55, lg: 60, xl: 60 },
                           fontWeight: activeSection === item.index ? 900 : 500,
-                          lineHeight: { xs: 1.2, md: 1 },
+                          lineHeight: { xs: 1.2, sm: 1.15, md: 1.05, lg: 1, xl: 1 },
                           cursor: 'pointer',
                           position: 'relative',
                           width: 'fit-content',
                           transition: 'all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1)',
                           color: activeSection === item.index ? '#fff' : 'rgba(255,255,255,0.6)',
-                          pl: { xs: '30px', md: '50px' },
+                          pl: { xs: "30px", sm: "36px", md: "44px", lg: "50px", xl: "50px" },
 
                           '&::before': {
                             content: `"0${index + 1}"`,
                             position: 'absolute',
-                            left: { xs: 0, md: 0 },
+                            left: { xs: 0, sm: 0, md: 0, lg: 0, xl: 0 },
                             top: '50%',
                             transform: 'translateY(-50%)',
-                            fontSize: { xs: 11, md: 18 },
+                            fontSize: { xs: 11, sm: 13, md: 16, lg: 18, xl: 18 },
                             opacity: 0.5,
                             transition: '0.4s',
                           },
                           '&::after': {
                             content: '""',
                             position: 'absolute',
-                            left: { xs: '30px', md: '50px' },
-                            bottom: { xs: -2, md: -8 },
+                            left: { xs: "30px", sm: "36px", md: "44px", lg: "50px", xl: "50px" },
+                            bottom: { xs: -2, sm: -3, md: -6, lg: -8, xl: -8 },
                             width: activeSection === item.index ? '100%' : 0,
-                            height: { xs: 2, md: 5 },
+                            height: { xs: 2, sm: 3, md: 4, lg: 5, xl: 5 },
                             borderRadius: 10,
                             backgroundColor: '#fff',
                             transition: '0.5s',
                           },
                           '&:hover': {
-                            transform: { xs: 'translateX(8px)', md: 'translateX(20px)' },
-                            letterSpacing: { xs: 1, md: 4 },
+                            transform: { xs: "translateX(8px)", sm: "translateX(12px)", md: "translateX(16px)", lg: "translateX(20px)", xl: "translateX(20px)" },
+                            letterSpacing: { xs: 1, sm: 2, md: 3, lg: 4, xl: 4 },
                             color: '#fff',
                           },
                           '&:hover::after': { width: '100%' },
@@ -360,14 +395,14 @@ function Header({ onSectionClick, activeSection, sections }) {
                   justifyContent: 'center',
                   alignItems: 'center',
                   order: 2,
-                  paddingTop: isMobile ? '8px' : 0,
-                  paddingBottom: isMobile ? '24px' : 0,
+                  paddingTop: 0,
+                  paddingBottom: 0,
                 }}
               >
                 <Stack
-                  spacing={{ xs: 2, md: 4 }}
+                  spacing={{ xs: 2, sm: 2.5, md: 3.5, lg: 4, xl: 4 }}
                   width="100%"
-                  maxWidth={{ xs: '100%', md: 420 }}
+                  maxWidth={{ xs: "100%", sm: "100%", md: 380, lg: 420, xl: 420 }}
                 >
                   {contactItems.map((item, index) => (
                     <motion.div
@@ -376,8 +411,8 @@ function Header({ onSectionClick, activeSection, sections }) {
                       animate={{ y: 0, opacity: 1, transition: { delay: 0.3 + index * 0.15, duration: 0.7 } }}
                     >
                       <Box sx={{
-                        p: { xs: 2, sm: 2.5, md: 4 },
-                        borderRadius: { xs: 3, md: 5 },
+                        p: { xs: 2, sm: 2.5, md: 3.25, lg: 4, xl: 4 },
+                        borderRadius: { xs: 3, sm: 3.5, md: 4.5, lg: 5, xl: 5 },
                         border: '1px solid rgba(255,255,255,0.1)',
                         background: 'rgba(255,255,255,0.03)',
                         backdropFilter: 'blur(12px)',
@@ -392,14 +427,14 @@ function Header({ onSectionClick, activeSection, sections }) {
                           {item.icon}
                           <Typography sx={{
                             fontWeight: 700,
-                            fontSize: { xs: 14, sm: 16, md: 18 },
+                            fontSize: { xs: 14, sm: 16, md: 17, lg: 18, xl: 18 },
                           }}>
                             {item.title}
                           </Typography>
                         </Stack>
                         <Typography sx={{
-                          mt: { xs: 1, md: 2 },
-                          fontSize: { xs: 12, sm: 13, md: 18 },
+                          mt: { xs: 1, sm: 1.25, md: 1.75, lg: 2, xl: 2 },
+                          fontSize: { xs: 12, sm: 13, md: 16, lg: 18, xl: 18 },
                           opacity: 0.75,
                           lineHeight: 1.5,
                           textAlign: 'left',
@@ -417,6 +452,7 @@ function Header({ onSectionClick, activeSection, sections }) {
         )}
       </AnimatePresence>
     </>
+    </LayoutGroup>
   );
 }
 

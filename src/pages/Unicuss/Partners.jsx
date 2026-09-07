@@ -1,32 +1,31 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Box, Button, Container, IconButton, Typography, useMediaQuery } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import { Box, Button, Container, Typography, useMediaQuery } from "@mui/material";
 import { motion } from "framer-motion";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import NorthEastIcon from "@mui/icons-material/NorthEast";
-import { FONT, blueBtn, fadeUp, titleSx, viewport, scrollToId } from "./motion";
+import { FONT, blueBtn, fadeUp, pagePx, titleSx, viewport, scrollToId } from "./motion";
 
 const GAP = 20;
-const COPIES = 4;
-const SPEED = 0.6;
+const AUTO_MS = 3200;
 
 export default function Partners({ data }) {
-  const isDesktop = useMediaQuery("(min-width:900px)");
-  const visible = isDesktop ? 3 : 1;
-  const items = data.items;
-  const loopItems = useMemo(() => {
-    if (!items?.length) return [];
-    return Array.from({ length: COPIES }, () => items).flat();
-  }, [items]);
+  const isXl = useMediaQuery("(min-width:1536px)");
+  const isLg = useMediaQuery("(min-width:1200px)");
+  const isMd = useMediaQuery("(min-width:900px)");
+  const isSm = useMediaQuery("(min-width:600px)");
+  const visible = isXl ? 4 : isLg ? 3 : isMd ? 3 : isSm ? 2 : 1;
+  const items = data.items || [];
+  const maxPage = Math.max(0, items.length - visible);
 
+  const sectionRef = useRef(null);
   const wrapRef = useRef(null);
-  const trackRef = useRef(null);
-  const xRef = useRef(0);
-  const pausedRef = useRef(false);
+  const [trackWidth, setTrackWidth] = useState(0);
+  const [page, setPage] = useState(0);
+  const [inView, setInView] = useState(false);
   const draggingRef = useRef(false);
   const dragStartXRef = useRef(0);
-  const dragStartOffsetRef = useRef(0);
-  const [trackWidth, setTrackWidth] = useState(0);
+
+  const cardWidth = trackWidth ? (trackWidth - GAP * (visible - 1)) / visible : 0;
+  const step = cardWidth + GAP;
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -37,163 +36,123 @@ export default function Partners({ data }) {
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
-  const cardWidth = trackWidth ? (trackWidth - GAP * (visible - 1)) / visible : 0;
-  const step = cardWidth + GAP;
 
   useEffect(() => {
-    const wrap = wrapRef.current;
-    const track = trackRef.current;
-    if (!wrap || !track || !items?.length || !step) return;
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setPage(0);
+          setInView(true);
+        } else {
+          setInView(false);
+        }
+      },
+      { threshold: 0.35 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
-    const loopWidth = items.length * step;
+  useEffect(() => {
+    if (!inView || maxPage <= 0) return;
+    const id = window.setInterval(() => {
+      setPage((prev) => (prev >= maxPage ? 0 : prev + 1));
+    }, AUTO_MS);
+    return () => window.clearInterval(id);
+  }, [inView, maxPage]);
 
-    const apply = (next) => {
-      if (loopWidth <= 0) return;
-      let x = next;
-      while (x <= -loopWidth) x += loopWidth;
-      while (x > 0) x -= loopWidth;
-      xRef.current = x;
-      track.style.transform = `translate3d(${x}px, 0, 0)`;
-    };
-
-    let raf;
-    const tick = () => {
-      if (!pausedRef.current && !draggingRef.current) apply(xRef.current - SPEED);
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-
-    const onWheel = (e) => {
-      e.preventDefault();
-      apply(xRef.current - (e.deltaY + e.deltaX));
-    };
-
-    wrap.addEventListener("wheel", onWheel, { passive: false });
-    return () => {
-      cancelAnimationFrame(raf);
-      wrap.removeEventListener("wheel", onWheel);
-    };
-  }, [items, step]);
-
-  const applyX = (next) => {
-    const track = trackRef.current;
-    const loopWidth = (items?.length ?? 0) * step;
-    if (!track || loopWidth <= 0) return;
-    let x = next;
-    while (x <= -loopWidth) x += loopWidth;
-    while (x > 0) x -= loopWidth;
-    xRef.current = x;
-    track.style.transform = `translate3d(${x}px, 0, 0)`;
-  };
-
-  const next = () => applyX(xRef.current - step);
-  const prev = () => applyX(xRef.current + step);
+  useEffect(() => {
+    setPage(0);
+  }, [visible]);
 
   const onPointerDown = (e) => {
     draggingRef.current = true;
-    pausedRef.current = true;
     dragStartXRef.current = e.clientX;
-    dragStartOffsetRef.current = xRef.current;
     e.currentTarget.setPointerCapture(e.pointerId);
   };
 
-  const onPointerMove = (e) => {
+  const onPointerUp = (e) => {
     if (!draggingRef.current) return;
-    applyX(dragStartOffsetRef.current + (e.clientX - dragStartXRef.current));
-  };
-
-  const stopDrag = () => {
     draggingRef.current = false;
-    pausedRef.current = false;
-  };
-
-  const arrowSx = {
-    width: { xs: 36, md: 44 },
-    height: { xs: 36, md: 44 },
-    border: "1px solid #000",
-    bgcolor: "#000",
-    color: "#fff",
-    "&:hover": { bgcolor: "#111" },
+    const dx = e.clientX - dragStartXRef.current;
+    if (dx < -40) setPage((prev) => Math.min(maxPage, prev + 1));
+    else if (dx > 40) setPage((prev) => Math.max(0, prev - 1));
   };
 
   return (
     <Box
+      ref={sectionRef}
       sx={{
         bgcolor: "#fff",
-        height: { xs: "auto", md: "90vh" },
-        minHeight: { xs: "80svh", md: 580 },
+        height: { xs: "auto", sm: "auto", md: "90vh", lg: "90vh", xl: "90vh" },
+        minHeight: { xs: "80svh", sm: "80svh", md: 540, lg: 580, xl: 580 },
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
       }}
     >
       <Container
-        maxWidth="xl"
+        maxWidth={false}
+        disableGutters
         sx={{
-          px: { xs: 2, sm: 3, md: 8 },
+          px: pagePx,
           flex: 1,
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          py: { xs: 7, md: 8 },
+          py: { xs: 7, sm: 7.25, md: 7.5, lg: 8, xl: 8 },
         }}
       >
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 1.5 }}>
-          <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={fadeUp}>
-            <Typography sx={{ ...titleSx, fontWeight: 600, color: "#111", textAlign: "left" }}>
-              {data.title}
-            </Typography>
-          </motion.div>
-          <Box sx={{ display: "flex", gap: 1, flexShrink: 0, pt: { xs: 0.5, md: 1 } }}>
-            <IconButton onClick={prev} sx={arrowSx}>
-              <ArrowBackIcon />
-            </IconButton>
-            <IconButton onClick={next} sx={arrowSx}>
-              <ArrowForwardIcon />
-            </IconButton>
-          </Box>
-        </Box>
+        <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={fadeUp}>
+          <Typography sx={{ ...titleSx, fontWeight: 600, color: "#111", textAlign: "left" }}>
+            {data.title}
+          </Typography>
+        </motion.div>
 
         <Box>
           <Box
             ref={wrapRef}
             onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={stopDrag}
-            onPointerCancel={stopDrag}
-            onMouseEnter={() => { pausedRef.current = true; }}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
+            onMouseEnter={() => setInView(false)}
             onMouseLeave={() => {
-              pausedRef.current = false;
-              draggingRef.current = false;
+              const el = sectionRef.current;
+              if (!el) return;
+              const rect = el.getBoundingClientRect();
+              const visibleNow = rect.top < window.innerHeight * 0.65 && rect.bottom > window.innerHeight * 0.35;
+              if (visibleNow) setInView(true);
             }}
             sx={{
               overflow: "hidden",
               width: "100%",
               cursor: "grab",
               userSelect: "none",
-              touchAction: "none",
+              touchAction: "pan-y",
               "&:active": { cursor: "grabbing" },
             }}
           >
             <Box
-              ref={trackRef}
               sx={{
                 display: "flex",
                 gap: `${GAP}px`,
                 width: "max-content",
-                willChange: "transform",
+                transform: `translate3d(${-page * step}px, 0, 0)`,
+                transition: draggingRef.current ? "none" : "transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)",
               }}
             >
-              {loopItems.map((item, index) => (
+              {items.map((item) => (
                 <Box
-                  key={`${item.name}-${index}`}
+                  key={item.name}
                   sx={{
                     flex: `0 0 ${cardWidth || 280}px`,
                     width: cardWidth || 280,
                     borderRadius: "16px",
                     overflow: "hidden",
                     position: "relative",
-                    height: { xs: 200, md: 320 },
+                    height: { xs: 200, sm: 240, md: 280, lg: 320, xl: 320 },
                     pointerEvents: "none",
                   }}
                 >
@@ -217,7 +176,7 @@ export default function Partners({ data }) {
                         fontFamily: FONT,
                         color: "#fff",
                         fontWeight: 600,
-                        fontSize: { xs: 16, md: 20 },
+                        fontSize: { xs: 16, sm: 17, md: 18, lg: 20, xl: 20 },
                         textAlign: "left",
                       }}
                     >
@@ -229,7 +188,37 @@ export default function Partners({ data }) {
             </Box>
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "center", mt: { xs: 3, md: 8 } }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: { xs: 0.8, sm: 1, md: 1.1, lg: 1.2, xl: 1.2 },
+              mt: { xs: 2, sm: 2.5, md: 3, lg: 3.5, xl: 3.5 },
+            }}
+          >
+            {Array.from({ length: maxPage + 1 }).map((_, index) => (
+              <Box
+                key={index}
+                component="button"
+                type="button"
+                aria-label={`Partner slide ${index + 1}`}
+                onClick={() => setPage(index)}
+                sx={{
+                  width: page === index ? { xs: 18, sm: 20, md: 22, lg: 24, xl: 24 } : { xs: 7, sm: 8, md: 8, lg: 9, xl: 9 },
+                  height: { xs: 7, sm: 8, md: 8, lg: 9, xl: 9 },
+                  p: 0,
+                  border: 0,
+                  borderRadius: 99,
+                  cursor: "pointer",
+                  bgcolor: page === index ? "#111" : "rgba(0,0,0,0.22)",
+                  transition: "width 0.3s ease, background-color 0.3s ease",
+                }}
+              />
+            ))}
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center", mt: { xs: 3, sm: 4, md: 5, lg: 6, xl: 6 } }}>
             <Button onClick={() => scrollToId("contact")} endIcon={<NorthEastIcon />} sx={blueBtn}>
               {data.cta}
             </Button>

@@ -22,7 +22,7 @@ import NorthEastIcon from "@mui/icons-material/NorthEast";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
-import { blueBtn, bodySx, fadeLeft, fadeUp, FONT, stagger, titleSx, viewport } from "./motion";
+import { blueBtn, bodySx, fadeLeft, fadeUp, FONT, pagePx, stagger, titleSx, viewport } from "./motion";
 
 const icons = [LocationOnOutlinedIcon, MailOutlineOutlinedIcon, CallOutlinedIcon];
 
@@ -67,19 +67,19 @@ const underline = {
   "& .MuiInput-root": {
     color: "#fff",
     fontFamily: FONT,
-    fontSize: { xs: 16, md: 18 },
+    fontSize: { xs: 16, sm: 16, md: 17, lg: 18, xl: 18 },
     "&:before": { borderBottom: "1px solid rgba(255,255,255,0.28)" },
     "&:hover:not(.Mui-disabled):before": { borderBottom: "1px solid rgba(255,255,255,0.7)" },
     "&:after": { borderBottom: "2px solid #3B82F6" },
   },
-  "& .MuiInputBase-input": { color: "#fff", fontFamily: FONT, fontSize: { xs: 16, md: 18 }, textAlign: "left" },
-  "& .MuiSelect-select": { fontSize: { xs: 16, md: 18 }, textAlign: "left" },
-  "& .MuiInputLabel-root": { color: "rgba(255,255,255,0.55)", fontFamily: FONT, fontSize: { xs: 14, md: 15 }, textAlign: "left" },
+  "& .MuiInputBase-input": { color: "#fff", fontFamily: FONT, fontSize: { xs: 16, sm: 16, md: 17, lg: 18, xl: 18 }, textAlign: "left" },
+  "& .MuiSelect-select": { fontSize: { xs: 16, sm: 16, md: 17, lg: 18, xl: 18 }, textAlign: "left" },
+  "& .MuiInputLabel-root": { color: "rgba(255,255,255,0.55)", fontFamily: FONT, fontSize: { xs: 14, sm: 14, md: 15, lg: 15, xl: 15 }, textAlign: "left" },
   "& .MuiInputLabel-root.Mui-focused": { color: "#3B82F6" },
   "& .MuiInputLabel-root.Mui-error": { color: "#F87171" },
   "& .MuiSelect-icon": { color: "rgba(255,255,255,0.6)" },
   "& .MuiFormLabel-root": { color: "rgba(255,255,255,0.55)", fontFamily: FONT },
-  "& .MuiFormHelperText-root": { fontFamily: FONT, fontSize: 12 },
+  "& .MuiFormHelperText-root": { fontFamily: FONT, fontSize: { xs: 11, sm: 11, md: 12, lg: 12, xl: 12 } },
 };
 
 const menuProps = {
@@ -185,8 +185,8 @@ export default function Contact({ data }) {
   };
 
   return (
-    <Box sx={{ bgcolor: "#000", py: { xs: 6, md: 8 } }}>
-      <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 8 } }}>
+    <Box sx={{ bgcolor: "#000", py: { xs: 6, sm: 6.5, md: 7, lg: 8, xl: 8 } }}>
+      <Container maxWidth={false} disableGutters sx={{ px: pagePx }}>
         <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={fadeUp}>
           <Typography sx={{ ...titleSx, fontWeight: 600, color: "#fff", textAlign: "left" }}>
             {data.title}
@@ -196,10 +196,10 @@ export default function Contact({ data }) {
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", md: "0.85fr 1.15fr" },
-            gap: { xs: 4, md: 6 },
+            gridTemplateColumns: { xs: "1fr", sm: "1fr", md: "0.85fr 1.15fr", lg: "0.85fr 1.15fr", xl: "0.85fr 1.15fr" },
+            gap: { xs: 4, sm: 4.5, md: 5, lg: 6, xl: 6 },
             alignItems: "start",
-            mt: { xs: 3, md: 8 },
+            mt: { xs: 3, sm: 4, md: 6, lg: 8, xl: 8 },
           }}
         >
           <Box>
@@ -232,8 +232,8 @@ export default function Contact({ data }) {
                   variants={fadeLeft}
                   sx={{
                     display: "grid",
-                    gridTemplateColumns: { xs: "42px 1fr", md: "42px 120px 1fr" },
-                    columnGap: { xs: 1.5, md: 2 },
+                    gridTemplateColumns: { xs: "42px 1fr", sm: "42px 1fr", md: "42px 120px 1fr", lg: "42px 120px 1fr", xl: "42px 120px 1fr" },
+                    columnGap: { xs: 1.5, sm: 1.6, md: 1.8, lg: 2, xl: 2 },
                     rowGap: 0.4,
                     alignItems: "center",
                   }}
@@ -251,7 +251,7 @@ export default function Contact({ data }) {
                       flexShrink: 0,
                     }}
                   >
-                    <Icon sx={{ fontSize: 20 }} />
+                    <Icon sx={{ fontSize: { xs: 18, sm: 18, md: 20, lg: 20, xl: 20 } }} />
                   </Box>
                   <Typography sx={{ ...bodySx, color: "#fff", fontWeight: 600, textAlign: "left" }}>
                     {item.title}
@@ -267,7 +267,7 @@ export default function Contact({ data }) {
                       fontWeight: 600,
                       m: 0,
                       wordBreak: "break-word",
-                      gridColumn: { xs: "2", md: "3" },
+                      gridColumn: { xs: "2", sm: "2", md: "3", lg: "3", xl: "3" },
                     }}
                   >
                     {item.value}
@@ -284,11 +284,11 @@ export default function Contact({ data }) {
             noValidate
             sx={{
               display: "grid",
-              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-              gap: { xs: 2.5, md: 2.5 },
-              width: { xs: "100%", md: "80%" },
-              ml: { md: "auto" },
-              justifySelf: { md: "end" },
+              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr", lg: "1fr 1fr", xl: "1fr 1fr" },
+              gap: { xs: 2.5, sm: 2.5, md: 2.5, lg: 2.5, xl: 2.5 },
+              width: { xs: "100%", sm: "100%", md: "80%", lg: "80%", xl: "80%" },
+              ml: { xs: 0, sm: 0, md: "auto", lg: "auto", xl: "auto" },
+              justifySelf: { xs: "stretch", sm: "stretch", md: "end", lg: "end", xl: "end" },
             }}
           >
             <TextField
@@ -322,7 +322,7 @@ export default function Contact({ data }) {
               error={Boolean(errors.designation)}
               helperText={errors.designation}
               fullWidth
-              sx={{ ...underline, gridColumn: { sm: "1 / -1" } }}
+              sx={{ ...underline, gridColumn: { xs: "auto", sm: "1 / -1", md: "1 / -1", lg: "1 / -1", xl: "1 / -1" } }}
             />
             <TextField
               name="workEmail"
@@ -334,7 +334,7 @@ export default function Contact({ data }) {
               error={Boolean(errors.workEmail)}
               helperText={errors.workEmail}
               fullWidth
-              sx={{ ...underline, gridColumn: { sm: "1 / -1" } }}
+              sx={{ ...underline, gridColumn: { xs: "auto", sm: "1 / -1", md: "1 / -1", lg: "1 / -1", xl: "1 / -1" } }}
             />
             <TextField
               name="phone"
@@ -349,23 +349,23 @@ export default function Contact({ data }) {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Typography sx={{ color: "rgba(255,255,255,0.75)", fontFamily: FONT, fontSize: { xs: 16, md: 18 } }}>+91</Typography>
+                    <Typography sx={{ color: "rgba(255,255,255,0.75)", fontFamily: FONT, fontSize: { xs: 16, sm: 16, md: 17, lg: 18, xl: 18 } }}>+91</Typography>
                   </InputAdornment>
                 ),
               }}
             />
             <FormControl variant="standard" error={Boolean(errors.type)} sx={underline}>
-              <FormLabel sx={{ fontFamily: FONT, fontSize: 12, mb: 0.5, textAlign: "left" }}>Type</FormLabel>
+              <FormLabel sx={{ fontFamily: FONT, fontSize: { xs: 12, sm: 12, md: 12, lg: 12, xl: 12 }, mb: 0.5, textAlign: "left" }}>Type</FormLabel>
               <RadioGroup row name="type" value={form.type} onChange={onChange} sx={{ flexWrap: "wrap" }}>
                 <FormControlLabel
                   value="Residential"
                   control={<Radio sx={{ color: "rgba(255,255,255,0.4)", "&.Mui-checked": { color: "#3B82F6" } }} />}
-                  label={<Typography sx={{ color: "#fff", fontFamily: FONT, fontSize: 14 }}>Residential</Typography>}
+                  label={<Typography sx={{ color: "#fff", fontFamily: FONT, fontSize: { xs: 13, sm: 13, md: 14, lg: 14, xl: 14 } }}>Residential</Typography>}
                 />
                 <FormControlLabel
                   value="Commercial"
                   control={<Radio sx={{ color: "rgba(255,255,255,0.4)", "&.Mui-checked": { color: "#3B82F6" } }} />}
-                  label={<Typography sx={{ color: "#fff", fontFamily: FONT, fontSize: 14 }}>Commercial</Typography>}
+                  label={<Typography sx={{ color: "#fff", fontFamily: FONT, fontSize: { xs: 13, sm: 13, md: 14, lg: 14, xl: 14 } }}>Commercial</Typography>}
                 />
               </RadioGroup>
               {errors.type && <FormHelperText>{errors.type}</FormHelperText>}
@@ -379,7 +379,7 @@ export default function Contact({ data }) {
               error={Boolean(errors.servicesNeeded)}
               helperText={errors.servicesNeeded}
               fullWidth
-              sx={{ ...underline, gridColumn: { sm: "1 / -1" } }}
+              sx={{ ...underline, gridColumn: { xs: "auto", sm: "1 / -1", md: "1 / -1", lg: "1 / -1", xl: "1 / -1" } }}
             />
             <TextField
               name="address"
@@ -390,7 +390,7 @@ export default function Contact({ data }) {
               error={Boolean(errors.address)}
               helperText={errors.address}
               fullWidth
-              sx={{ ...underline, gridColumn: { sm: "1 / -1" } }}
+              sx={{ ...underline, gridColumn: { xs: "auto", sm: "1 / -1", md: "1 / -1", lg: "1 / -1", xl: "1 / -1" } }}
             />
             <FormControl variant="standard" fullWidth error={Boolean(errors.state)} sx={underline}>
               <InputLabel>State</InputLabel>
@@ -423,7 +423,7 @@ export default function Contact({ data }) {
               error={Boolean(errors.pincode)}
               helperText={errors.pincode}
               fullWidth
-              sx={{ ...underline, gridColumn: { sm: "1 / -1" } }}
+              sx={{ ...underline, gridColumn: { xs: "auto", sm: "1 / -1", md: "1 / -1", lg: "1 / -1", xl: "1 / -1" } }}
             />
             <TextField
               name="message"
@@ -436,15 +436,15 @@ export default function Contact({ data }) {
               fullWidth
               multiline
               minRows={2}
-              sx={{ ...underline, gridColumn: { sm: "1 / -1" } }}
+              sx={{ ...underline, gridColumn: { xs: "auto", sm: "1 / -1", md: "1 / -1", lg: "1 / -1", xl: "1 / -1" } }}
             />
-            <Box sx={{ gridColumn: { sm: "1 / -1" }, mt: 1 }}>
+            <Box sx={{ gridColumn: { xs: "auto", sm: "1 / -1", md: "1 / -1", lg: "1 / -1", xl: "1 / -1" }, mt: 1 }}>
               <Button
                 type="submit"
                 fullWidth
                 disabled={submitting}
                 endIcon={<NorthEastIcon />}
-                sx={{ ...blueBtn, py: 1.4, width: "100%" }}
+                sx={{ ...blueBtn, py: { xs: 1.2, sm: 1.25, md: 1.35, lg: 1.4, xl: 1.4 }, width: "100%" }}
               >
                 {submitting ? "Sending..." : data.cta}
               </Button>

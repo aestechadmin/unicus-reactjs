@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Container, Typography } from "@mui/material";
 import { motion } from "framer-motion";
-import { fadeUp, scaleIn, stagger, viewport, titleSx } from "./motion";
+import { fadeUp, pagePx, scaleIn, stagger, viewport, titleSx } from "./motion";
 
 const STAR = "/img/unicuss/icons/star.png";
 
@@ -10,8 +10,8 @@ export default function WhyChoose({ data }) {
     <Box
       sx={{
         position: "relative",
-        height: { xs: "auto", md: "100vh" },
-        minHeight: { xs: "100svh", md: 720 },
+        height: { xs: "auto", sm: "auto", md: "100vh", lg: "100vh", xl: "100vh" },
+        minHeight: { xs: "100svh", sm: "100svh", md: 680, lg: 720, xl: 720 },
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
@@ -24,23 +24,23 @@ export default function WhyChoose({ data }) {
           inset: 0,
           backgroundImage: `url(${data.image})`,
           backgroundRepeat: "no-repeat",
-          backgroundSize: { xs: "240% auto", md: "120% auto" },
-          backgroundPosition: { xs: "18% 50%", md: "8% 50%" },
+          backgroundSize: { xs: "240% auto", sm: "200% auto", md: "140% auto", lg: "120% auto", xl: "120% auto" },
+          backgroundPosition: { xs: "18% 50%", sm: "16% 50%", md: "10% 50%", lg: "8% 50%", xl: "8% 50%" },
         }}
       />
 
       <Container
-        maxWidth="xl"
+        maxWidth={false} disableGutters
         sx={{
-          px: { xs: 2, sm: 3, md: 8 },
+          px: pagePx,
           position: "relative",
           zIndex: 1,
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          pt: { xs: 8, md: 12 },
-          pb: { xs: 4, md: 5 },
+          justifyContent: "flex-start",
+          pt: { xs: 8, sm: 9, md: 10, lg: 12, xl: 12 },
+          pb: { xs: 10, sm: 12, md: 14, lg: 16, xl: 18 },
         }}
       >
         <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={fadeUp}>
@@ -57,9 +57,9 @@ export default function WhyChoose({ data }) {
           variants={stagger}
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr 1fr", md: "repeat(4, 1fr)" },
-            gap: { xs: 1.2, md: 2.2 },
-            mb: { xs: 2, md: 8 },
+            gridTemplateColumns: { xs: "1fr 1fr", sm: "1fr 1fr", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)", xl: "repeat(4, 1fr)" },
+            gap: { xs: 1.2, sm: 1.5, md: 1.8, lg: 2.2, xl: 2.2 },
+            mt: "auto",
           }}
         >
           {data.items.map((item) => (
@@ -71,8 +71,8 @@ export default function WhyChoose({ data }) {
               sx={{
                 bgcolor: "rgba(255, 255, 255, 0.7)",
                 borderRadius: "16px",
-                p: { xs: 1.5, md: 2.6 },
-                minHeight: { xs: 150, md: 190 },
+                p: { xs: 1.5, sm: 1.8, md: 2.2, lg: 2.6, xl: 2.6 },
+                minHeight: { xs: 150, sm: 160, md: 175, lg: 190, xl: 190 },
                 display: "flex",
                 flexDirection: "column",
                 backdropFilter: "blur(34px)",
@@ -84,19 +84,19 @@ export default function WhyChoose({ data }) {
                 src={STAR}
                 alt=""
                 sx={{
-                  width: { xs: 28, md: 34 },
-                  height: { xs: 28, md: 34 },
+                  width: { xs: 28, sm: 30, md: 32, lg: 34, xl: 34 },
+                  height: { xs: 28, sm: 30, md: 32, lg: 34, xl: 34 },
                   objectFit: "contain",
                   mb: 2,
                 }}
               />
-              <Typography sx={{ color: "#111", fontWeight: 600, fontSize: { xs: 16, md: 18 }, textAlign: "left" }}>
+              <Typography sx={{ color: "#111", fontWeight: 600, fontSize: { xs: 16, sm: 16, md: 17, lg: 18, xl: 18 }, textAlign: "left" }}>
                 {item.title}
               </Typography>
               <Typography
                 sx={{
                   color: "#374151",
-                  fontSize: { xs: 12, md: 14 },
+                  fontSize: { xs: 12, sm: 12, md: 13, lg: 14, xl: 14 },
                   fontWeight: 400,
                   lineHeight: 1.6,
                   textAlign: "left",

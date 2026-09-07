@@ -3,6 +3,7 @@ export const scrollToId = (id) => {
   const el = document.getElementById(id);
   if (!el) return;
   if (window.__lenis) {
+    window.__lenis.start?.();
     window.__lenis.scrollTo(el, { offset: -80, duration: 1.4 });
     return;
   }
@@ -47,10 +48,12 @@ export const viewport = { once: true, amount: 0.18 };
 
 export const FONT = "'Fustat', sans-serif";
 
+export const pagePx = { xs: 2, sm: 3, md: 6, lg: 8, xl: 10 };
+
 export const titleSx = {
   fontFamily: FONT,
   fontWeight: 700,
-  fontSize: { xs: 28, sm: 48, md: 64 },
+  fontSize: { xs: 28, sm: 40, md: 52, lg: 64, xl: 72 },
   letterSpacing: "-0.03em",
   lineHeight: 1.1,
 };
@@ -58,28 +61,28 @@ export const titleSx = {
 export const subSx = {
   fontFamily: FONT,
   fontWeight: 600,
-  fontSize: { xs: 18, md: 26 },
+  fontSize: { xs: 18, sm: 20, md: 24, lg: 26, xl: 28 },
   lineHeight: 1.3,
 };
 
 export const bodySx = {
   fontFamily: FONT,
   fontWeight: 400,
-  fontSize: { xs: 14, md: 18 },
+  fontSize: { xs: 14, sm: 15, md: 16, lg: 18, xl: 20 },
   lineHeight: 1.7,
 };
 
 export const cardTitleSx = {
   fontFamily: FONT,
   fontWeight: 600,
-  fontSize: { xs: 15, md: 16 },
+  fontSize: { xs: 15, sm: 15, md: 16, lg: 16, xl: 17 },
   lineHeight: 1.4,
 };
 
 export const cardBodySx = {
   fontFamily: FONT,
   fontWeight: 400,
-  fontSize: { xs: 13, md: 14 },
+  fontSize: { xs: 13, sm: 13, md: 14, lg: 14, xl: 15 },
   lineHeight: 1.55,
 };
 
@@ -88,10 +91,10 @@ export const blueBtn = {
   bgcolor: "#3B82F6",
   color: "#fff",
   borderRadius: 2,
-  px: { xs: 2.4, md: 3.2 },
-  py: { xs: 1, md: 1.15 },
+  px: { xs: 2.4, sm: 2.6, md: 3, lg: 3.2, xl: 3.6 },
+  py: { xs: 1, sm: 1.05, md: 1.1, lg: 1.15, xl: 1.25 },
   fontWeight: 600,
   textTransform: "none",
-  fontSize: { xs: 14, md: 16 },
+  fontSize: { xs: 14, sm: 14, md: 15, lg: 16, xl: 17 },
   "&:hover": { bgcolor: "#2563EB" },
 };

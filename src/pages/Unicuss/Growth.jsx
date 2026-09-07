@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Container, Typography } from "@mui/material";
 import { animate, motion, useInView } from "framer-motion";
-import { fadeUp, stagger, viewport, titleSx, FONT } from "./motion";
+import { fadeUp, stagger, viewport, titleSx, FONT, pagePx } from "./motion";
 
 function parseStat(value) {
   const match = String(value).match(/^(.*?)(\d+)(.*)$/);
@@ -41,8 +41,8 @@ export default function Growth({ data }) {
     <Box
       sx={{
         position: "relative",
-        height: { xs: "auto", md: "90vh" },
-        minHeight: { xs: "80svh", md: 580 },
+        height: { xs: "auto", sm: "auto", md: "92vh", lg: "92vh", xl: "90vh" },
+        minHeight: { xs: "78svh", sm: "80svh", md: 640, lg: 680, xl: 700 },
         color: "#fff",
         overflow: "hidden",
         display: "flex",
@@ -67,17 +67,17 @@ export default function Growth({ data }) {
       />
 
       <Container
-        maxWidth="xl"
+        maxWidth={false} disableGutters
         sx={{
-          px: { xs: 2, sm: 3, md: 8 },
+          px: pagePx,
           position: "relative",
           zIndex: 1,
           flex: 1,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          pt: { xs: 8, md: 12 },
-          pb: { xs: 4, md: 18 },
+          justifyContent: "flex-start",
+          pt: { xs: 8, sm: 9, md: 9, lg: 10, xl: 10 },
+          pb: { xs: 10, sm: 12, md: 16, lg: 20, xl: 22 },
         }}
       >
         <motion.div initial="hidden" whileInView="visible" viewport={viewport} variants={fadeUp}>
@@ -101,9 +101,10 @@ export default function Growth({ data }) {
           viewport={viewport}
           variants={stagger}
           sx={{
+            mt: "auto",
             display: "grid",
-            gridTemplateColumns: { xs: "1fr 1fr", sm: "repeat(3, 1fr)", md: "repeat(5, 1fr)" },
-            gap: { xs: 1.5, md: 3 },
+            gridTemplateColumns: { xs: "1fr 1fr", sm: "repeat(3, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(5, 1fr)", xl: "repeat(5, 1fr)" },
+            gap: { xs: 1.5, sm: 2, md: 2.5, lg: 3, xl: 3 },
           }}
         >
           {data.stats.map((stat) => (
@@ -111,14 +112,14 @@ export default function Growth({ data }) {
               key={stat.label}
               component={motion.div}
               variants={fadeUp}
-              sx={{ textAlign: "left" }}
+              sx={{ textAlign: "left", minHeight: { xs: 72, sm: 84, md: 100, lg: 120, xl: 128 } }}
             >
               <Typography
                 sx={{
                   fontFamily: FONT,
                   color: "#fff",
                   fontWeight: 500,
-                  fontSize: { xs: 22, sm: 28, md: 40 },
+                  fontSize: { xs: 28, sm: 34, md: 42, lg: 52, xl: 56 },
                   letterSpacing: "-0.03em",
                   lineHeight: 1.15,
                 }}
@@ -129,8 +130,8 @@ export default function Growth({ data }) {
                 sx={{
                   fontFamily: FONT,
                   color: "rgba(255,255,255,0.72)",
-                  mt: 0.6,
-                  fontSize: { xs: 12, md: 14 },
+                  mt: 0.8,
+                  fontSize: { xs: 13, sm: 14, md: 15, lg: 16, xl: 16 },
                   fontWeight: 400,
                 }}
               >
