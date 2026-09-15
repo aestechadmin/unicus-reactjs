@@ -110,27 +110,38 @@ function Header({ onSectionClick, activeSection, sections }) {
         sx={{
           top: 0,
           overflow: "visible",
+          bgcolor: "transparent",
           background: "linear-gradient(360deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.49) 100%)",
           boxShadow: "none",
           py: 1.5,
           zIndex: 1201,
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            left: "50%",
-            top: 0,
-            bottom: 0,
-            width: "100%",
-            transform: "translateX(-50%)",
-            background: "linear-gradient(360deg, rgba(255, 255, 255, 0.91) 0%, rgba(255, 255, 255, 0.96) 100%)",
-            filter: "blur(50px)",
-            backdropFilter: "blur(80px)",
-            WebkitMaskImage: "linear-gradient(180deg, #000 0%, transparent 100%)",
-            maskImage: "linear-gradient(180deg, #000 0%, transparent 100%)",
-            pointerEvents: "none",
-          },
         }}
       >
+        <Box
+          aria-hidden
+          sx={{
+            position: "absolute",
+            inset: 0,
+            overflow: "hidden",
+            pointerEvents: "none",
+            zIndex: 0,
+            backdropFilter: "blur(20px) saturate(160%)",
+            WebkitBackdropFilter: "blur(20px) saturate(160%)",
+            WebkitMaskImage: "linear-gradient(180deg, #000 0%, #000 58%, transparent 100%)",
+            maskImage: "linear-gradient(180deg, #000 0%, #000 58%, transparent 100%)",
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              left: "50%",
+              top: 0,
+              height: "70%",
+              width: "100%",
+              transform: "translateX(-50%)",
+              background: "linear-gradient(360deg, rgba(255, 255, 255, 0.66) 0%, rgba(255, 255, 255, 0.65) 100%)",
+              filter: "blur(50px)",
+            },
+          }}
+        />
         <Toolbar
           disableGutters
           sx={{
